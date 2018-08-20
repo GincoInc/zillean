@@ -108,7 +108,15 @@ func TestRPC_GetLatestTxBlock(t *testing.T) {
 
 func TestRPC_GetTransaction(t *testing.T) {
 	Convey("returns details of a Transaction by its hash", t, func() {
-		// TODO
+		result, err := NewRPC(baseURL).GetTransaction("43b0e4cf19193bdcfaf6ae648228734bdddcc7ba1b6dae2f67b40c74a7342e81")
+		So(err, ShouldBeNil)
+		So(result.ID, ShouldEqual, "43b0e4cf19193bdcfaf6ae648228734bdddcc7ba1b6dae2f67b40c74a7342e81")
+		So(result.Amount, ShouldEqual, "12")
+		So(result.Nonce, ShouldEqual, "41")
+		So(result.SenderPubKey, ShouldEqual, "0x03F66371B40EE4F1C52B58CEB1B596E4D25D15EF1F5034B6222763454E99F9CC2B")
+		So(result.Signature, ShouldEqual, "0x3F3CB6550625A1926726359D714FD31CBC1347CCC1DD24D3751E57A4D70C5A84C59F1D60608CC1D54FB371BCAC13721774A0246BAFA2A6429B59BE68DCA3EE50")
+		So(result.ToAddr, ShouldEqual, "c6d3ec0a2f97e4cded46899f2e805fa69c35a86f")
+		So(result.Version, ShouldEqual, "0")
 	})
 }
 

@@ -99,9 +99,8 @@ func (r *RPC) GetLatestTxBlock() (*TxBlock, error) {
 }
 
 // GetTransaction returns details of a Transaction by its hash.
-// TODO
 func (r *RPC) GetTransaction(txHash string) (*Transaction, error) {
-	resp, err := r.client.Call("GetTransaction", []interface{}{})
+	resp, err := r.client.Call("GetTransaction", []interface{}{txHash})
 	if err != nil {
 		return nil, err
 	}

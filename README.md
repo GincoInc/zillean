@@ -21,7 +21,7 @@ go get -u github.com/GincoInc/zillean
 - [x] GetTxBlock
 - [x] GetLatestDsBlock
 - [x] GetLatestTxBlock
-- [ ] GetTransaction
+- [x] GetTransaction
 - [ ] CreateTransaction
 - [ ] GetSmartContracts
 - [ ] GetSmartContractState
