@@ -14,7 +14,15 @@ go get -u github.com/GincoInc/zillean
 
 ## Supports
 ### Wallet API
-- TODO
+- [x] GeneratePrivateKey
+- [ ] IsPrivateKey
+- [x] GetPublicKeyFromPrivateKey
+- [ ] IsPublicjKey
+- [x] GetAddressFromPrivateKey
+- [x] GetAddressFromPublicKey
+- [ ] IsAddress
+- [ ] CreateTransactionJSON
+
 ### JSON-RPC API
 - [x] GetBalance
 - [x] GetDsBlock

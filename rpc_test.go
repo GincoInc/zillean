@@ -6,10 +6,6 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-const (
-	baseURL = "https://api-scilla.zilliqa.com"
-)
-
 var (
 	address        = "0x7f8A9ED7bA55A092A74105E5bD0Ec9C98e66051d"
 	invalidAddress = "InvalidAddress"
