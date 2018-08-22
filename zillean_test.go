@@ -128,6 +128,24 @@ func TestZillean_GeneratePrivateKey(t *testing.T) {
 	})
 }
 
+func TestZillean_VerifyPrivateKey(t *testing.T) {
+	Convey("returns true when a valid private key is given ", t, func() {
+		for _, vector := range testVectors {
+			result := NewZillean(baseURL).VerifyPrivateKey(vector.privateKey)
+			So(result, ShouldBeTrue)
+		}
+	})
+
+	Convey("returns false when a invalid private key is given ", t, func() {
+		result := NewZillean(baseURL).VerifyPrivateKey("invalid private key")
+		So(result, ShouldBeFalse)
+		result = NewZillean(baseURL).VerifyPrivateKey("0000000000000000000000000000000000000000000000000000000000000000")
+		So(result, ShouldBeFalse)
+		result = NewZillean(baseURL).VerifyPrivateKey("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141")
+		So(result, ShouldBeFalse)
+	})
+}
+
 func TestZillean_GetPublicKeyFromPrivateKey(t *testing.T) {
 	Convey("returns a public key from a private key", t, func() {
 		for _, vector := range testVectors {
@@ -135,6 +153,20 @@ func TestZillean_GetPublicKeyFromPrivateKey(t *testing.T) {
 			So(err, ShouldBeNil)
 			So(result, ShouldEqual, vector.publicKey)
 		}
+	})
+}
+
+func TestZillean_IsPublicKey(t *testing.T) {
+	Convey("returns true when a valid public key is given ", t, func() {
+		for _, vector := range testVectors {
+			result := NewZillean(baseURL).IsPublicKey(vector.publicKey)
+			So(result, ShouldBeTrue)
+		}
+	})
+
+	Convey("returns false when a invalid public key is given ", t, func() {
+		result := NewZillean(baseURL).IsPublicKey("invalid public key")
+		So(result, ShouldBeFalse)
 	})
 }
 
@@ -155,5 +187,19 @@ func TestZillean_GetAddressFromPublicKey(t *testing.T) {
 			So(err, ShouldBeNil)
 			So(result, ShouldEqual, vector.address)
 		}
+	})
+}
+
+func TestZillean_IsAddress(t *testing.T) {
+	Convey("returns true when a valid address is given ", t, func() {
+		for _, vector := range testVectors {
+			result := NewZillean(baseURL).IsAddress(vector.address)
+			So(result, ShouldBeTrue)
+		}
+	})
+
+	Convey("returns false when a invalid address is given ", t, func() {
+		result := NewZillean(baseURL).IsAddress("invalid address")
+		So(result, ShouldBeFalse)
 	})
 }

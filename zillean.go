@@ -1,12 +1,10 @@
 package zillean
 
 import (
-	"crypto/ecdsa"
 	"crypto/rand"
-	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"math/big"
+	"regexp"
 
 	"github.com/ethereum/go-ethereum/crypto"
 )
@@ -33,6 +31,20 @@ func (z *Zillean) GeneratePrivateKey() (string, error) {
 	return fmt.Sprintf("%x", b), nil
 }
 
+// VerifyPrivateKey ...
+func (z *Zillean) VerifyPrivateKey(privateKey string) bool {
+	privateKeyBytes, err := hex.DecodeString(privateKey)
+	if err != nil {
+		return false
+	}
+
+	if _, err := crypto.ToECDSA(privateKeyBytes); err != nil {
+		return false
+	}
+
+	return true
+}
+
 // GetPublicKeyFromPrivateKey ...
 func (z *Zillean) GetPublicKeyFromPrivateKey(privateKey string) (string, error) {
 	privateKeyBytes, err := hex.DecodeString(privateKey)
@@ -46,6 +58,11 @@ func (z *Zillean) GetPublicKeyFromPrivateKey(privateKey string) (string, error) 
 	}
 
 	return fmt.Sprintf("%x", fromECDSAPub(true, &ecdsaPrivateKey.PublicKey)), nil
+}
+
+// IsPublicKey ...
+func (z *Zillean) IsPublicKey(publicKey string) bool {
+	return regexp.MustCompile(`^[0-9a-fA-F]{66}$`).MatchString(publicKey)
 }
 
 // GetAddressFromPrivateKey ...
@@ -73,50 +90,7 @@ func (z *Zillean) GetAddressFromPublicKey(publicKey string) (string, error) {
 	return publicKeyToAddress(publicKeyBytes), nil
 }
 
-// utils ///////////////////////////////////////////////////////////////////
-//       ///////////////////////////////////////////////////////////////////
-//       ///////////////////////////////////////////////////////////////////
-//       ///////////////////////////////////////////////////////////////////
-
-func publicKeyToAddress(publicKeyBytes []byte) string {
-	return fmt.Sprintf("%x", hashSha256(publicKeyBytes)[12:])
-}
-
-func hashSha256(data []byte) []byte {
-	sha := sha256.New()
-	sha.Write(data)
-
-	return sha.Sum(nil)
-}
-
-func fromECDSAPub(compress bool, pub *ecdsa.PublicKey) []byte {
-	if pub == nil || pub.X == nil || pub.Y == nil {
-		return nil
-	}
-
-	return marshal(compress, pub.X, pub.Y)
-}
-
-func marshal(compress bool, x, y *big.Int) []byte {
-	byteLen := (crypto.S256().Params().BitSize + 7) >> 3
-
-	if compress {
-		ret := make([]byte, 1+byteLen)
-		if y.Bit(0) == 0 {
-			ret[0] = 2
-		} else {
-			ret[0] = 3
-		}
-		xBytes := x.Bytes()
-		copy(ret[1+byteLen-len(xBytes):], xBytes)
-		return ret
-	}
-
-	ret := make([]byte, 1+2*byteLen)
-	ret[0] = 4 // uncompressed point
-	xBytes := x.Bytes()
-	copy(ret[1+byteLen-len(xBytes):], xBytes)
-	yBytes := y.Bytes()
-	copy(ret[1+2*byteLen-len(yBytes):], yBytes)
-	return ret
+// IsAddress ...
+func (z *Zillean) IsAddress(address string) bool {
+	return regexp.MustCompile(`^[0-9a-fA-F]{40}$`).MatchString(address)
 }
