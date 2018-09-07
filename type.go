@@ -2,8 +2,8 @@ package zillean
 
 // Balance ...
 type Balance struct {
-	Balance int64 `json:"balance"`
-	Nonce   int64 `json:"nonce"`
+	Balance int64 `json:"balance,string"`
+	Nonce   int64 `json:"nonce,string"`
 }
 
 // DsBlock ...
@@ -35,6 +35,7 @@ type TxBlock struct {
 		MinerPubKey    string `json:"MinerPubKey"`
 		NumMicroBlocks int64  `json:"NumMicroBlocks"`
 		NumTxns        int64  `json:"NumTxns"`
+		Rewards        string `json:"Rewards"`
 		StateHash      string `json:"StateHash"`
 		Timestamp      string `json:"Timestamp"`
 		TxnHash        string `json:"TxnHash"`
@@ -57,13 +58,15 @@ type Transaction struct {
 
 // RawTx ...
 type RawTx struct {
-	Version   int64  `json:"version"`
-	Nonce     int64  `json:"nonce"`
+	Version   int32  `json:"version"`
+	Nonce     int32  `json:"nonce"`
 	To        string `json:"to"`
 	Amount    int64  `json:"amount"`
 	PubKey    string `json:"pubKey"`
-	GasPrice  int64  `json:"gasPrice"`
-	GasLimit  int64  `json:"gasLimit"`
+	GasPrice  int32  `json:"gasPrice"`
+	GasLimit  int32  `json:"gasLimit"`
+	Code      string `json:"code"`
+	Data      string `json:"data"`
 	Signature string `json:"signature"`
 }
 
@@ -98,4 +101,17 @@ type ListedBlocks struct {
 		Hash     string `json:"Hash"`
 	} `json:"data"`
 	MaxPages int64 `json:"maxPages"`
+}
+
+// RawTransaction ...
+type RawTransaction struct {
+	Version  int32
+	Nonce    int32
+	To       string
+	Amount   string
+	PubKey   string
+	GasPrice int32
+	GasLimit int32
+	Code     string
+	Data     string
 }

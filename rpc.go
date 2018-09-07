@@ -2,6 +2,7 @@ package zillean
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/GincoInc/jsonrpc"
 )
@@ -118,8 +119,19 @@ func (r *RPC) GetTransaction(txHash string) (*Transaction, error) {
 // See https://github.com/Zilliqa/Zilliqa-JavaScript-Library/#createtransactionjson in javascript
 // for an example of how to construct the transaction object.
 // TODO
-func (r *RPC) CreateTransaction(rawTx RawTx) (string, error) {
-	resp, err := r.client.Call("CreateTransaction", []interface{}{rawTx})
+func (r *RPC) CreateTransaction(rawTx RawTransaction, signature string) (string, error) {
+	amount, _ := strconv.ParseInt(rawTx.Amount, 16, 64)
+	resp, err := r.client.Call("CreateTransaction", []interface{}{RawTx{
+		Version:   rawTx.Version,
+		Nonce:     rawTx.Nonce,
+		To:        rawTx.To,
+		Amount:    amount,
+		PubKey:    rawTx.PubKey,
+		GasPrice:  rawTx.GasPrice,
+		GasLimit:  rawTx.GasLimit,
+		Signature: signature,
+	}})
+
 	if err != nil {
 		return "", err
 	}
@@ -128,9 +140,12 @@ func (r *RPC) CreateTransaction(rawTx RawTx) (string, error) {
 		return "", errors.New(resp.Error.Message)
 	}
 
-	var result string
+	var result struct {
+		Info   string `json:"Info"`
+		TranID string `json:"TranID"`
+	}
 	resp.GetObject(&result)
-	return result, nil
+	return result.TranID, nil
 }
 
 // GetSmartContracts returns the list of smart contracts created by an address.
