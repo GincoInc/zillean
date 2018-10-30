@@ -20,7 +20,7 @@ import (
 
 func main() {
   // initialize the Zillean
-  zillean := zillean.NewZillean("https://api-scilla.zilliqa.com")
+  zillean := zillean.NewZillean("http://127.0.0.1:4200")
   
   // generate a private key
   privKey, _ := zillean.GeneratePrivateKey()
@@ -33,6 +33,22 @@ func main() {
   // get a address
   address, _ := zillean.GetAddressFromPrivateKey(privKey)
   fmt.Printf("address: %s\n", address) // address: 5f0e26adf701bb6a4535f0485fe3400e6e90c9ae
+
+  // sign the transaction
+  zillean := NewZillean(testNet)
+  privateKey := "your private key"
+  publicKey, _ := zillean.GetPublicKeyFromPrivateKey(privateKey)
+  rawTx := RawTransaction{
+    Version:  0,
+    Nonce:    2,
+    To:       "to address",
+    Amount:   "1",
+    PubKey:   publicKey,
+    GasPrice: 1,
+    GasLimit: 1,
+  }
+  signature, _ := zillean.SignTransaction(rawTx, privateKey)
+  txID, _ := zillean.RPC.CreateTransaction(rawTx, signature)
 }
 ```
 
@@ -45,7 +61,8 @@ func main() {
 - [x] GetAddressFromPrivateKey
 - [x] GetAddressFromPublicKey
 - [x] IsAddress
-- [ ] CreateTransactionJSON
+- [x] SignTransaction
+- [x] VerifySignature
 
 ### JSON-RPC API
 - [x] GetBalance
@@ -54,7 +71,7 @@ func main() {
 - [x] GetLatestDsBlock
 - [x] GetLatestTxBlock
 - [x] GetTransaction
-- [ ] CreateTransaction
+- [x] CreateTransaction
 - [ ] GetSmartContracts
 - [ ] GetSmartContractState
 - [ ] GetSmartContractCode
