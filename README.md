@@ -35,19 +35,16 @@ func main() {
   fmt.Printf("address: %s\n", address) // address: 5f0e26adf701bb6a4535f0485fe3400e6e90c9ae
 
   // sign the transaction
-  zillean := NewZillean(testNet)
-  privateKey := "your private key"
-  publicKey, _ := zillean.GetPublicKeyFromPrivateKey(privateKey)
   rawTx := RawTransaction{
     Version:  0,
     Nonce:    2,
     To:       "to address",
     Amount:   "1",
-    PubKey:   publicKey,
+    PubKey:   pubKey,
     GasPrice: 1,
     GasLimit: 1,
   }
-  signature, _ := zillean.SignTransaction(rawTx, privateKey)
+  signature, _ := zillean.SignTransaction(rawTx, privKey)
   txID, _ := zillean.RPC.CreateTransaction(rawTx, signature)
 }
 ```
