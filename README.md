@@ -6,9 +6,17 @@ The project is still under development. Please note that specifications may chan
 ## Installation
 ```sh
 go get -u github.com/GincoInc/zillean
+go get -u github.com/GincoInc/go-crypto
 ```
 
 ## Getting started
+
+```
+cd $GOPATH/src/github.com/GincoInc/zillean/example
+go run main.go
+```
+
+## Example
 ```go
 package main
 
@@ -23,7 +31,7 @@ func main() {
   zillean := zillean.NewZillean("http://127.0.0.1:4200")
   
   // generate a private key
-  privKey, _ := zillean.GeneratePrivateKey()
+  privKey := zillean.GeneratePrivateKey()
   fmt.Printf("private key: %s\n", privKey) // private key: b6c00064b10d33c4a9fadb5b473d834b1995f132acdbe4b831ab5343702c174e
   
   // get a public key
