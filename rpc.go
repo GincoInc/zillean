@@ -118,7 +118,6 @@ func (r *RPC) GetTransaction(txHash string) (*Transaction, error) {
 // CreateTransaction create a new Transaction.
 // See https://github.com/Zilliqa/Zilliqa-JavaScript-Library/#createtransactionjson in javascript
 // for an example of how to construct the transaction object.
-// TODO
 func (r *RPC) CreateTransaction(rawTx RawTransaction, signature string) (string, error) {
 	amount, _ := strconv.ParseInt(rawTx.Amount, 16, 64)
 	resp, err := r.client.Call("CreateTransaction", []interface{}{RawTx{
