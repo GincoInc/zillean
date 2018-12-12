@@ -2,7 +2,6 @@ package zillean
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/GincoInc/jsonrpc"
@@ -94,7 +93,6 @@ func (r *RPC) GetLatestTxBlock() (*TxBlock, error) {
 	if resp.Error != nil {
 		return nil, errors.New(resp.Error.Message)
 	}
-	fmt.Println(resp)
 
 	var result TxBlock
 	resp.GetObject(&result)
