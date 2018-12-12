@@ -24,23 +24,24 @@ type DsBlock struct {
 // TxBlock ...
 type TxBlock struct {
 	Body struct {
-		HeaderSign       string   `json:"HeaderSign"`
-		MicroBlockEmpty  []int64  `json:"MicroBlockEmpty"`
-		MicroBlockHashes []string `json:"MicroBlockHashes"`
+		HeaderSign string `json:"HeaderSign"`
+		//MicroBlockInfos []string `json:"MicroBlockInfos"`
 	} `json:"body"`
 	Header struct {
 		BlockNum       string `json:"BlockNum"`
 		DsBlockNum     string `json:"DSBlockNum"`
 		GasLimit       string `json:"GasLimit"`
 		GasUsed        string `json:"GasUsed"`
+		MbInfoHash     string `json:"MbInfoHash"`
 		MinerPubKey    string `json:"MinerPubKey"`
 		NumMicroBlocks int64  `json:"NumMicroBlocks"`
 		NumTxns        int64  `json:"NumTxns"`
+		PrevBlockHash  string `json:"prevBlockHash"`
 		Rewards        string `json:"Rewards"`
-		StateHash      string `json:"StateHash"`
+		StateDeltaHash string `json:"StateDeltaHash"`
+		StateRootHash  string `json:"StateRootHash"`
 		Timestamp      string `json:"Timestamp"`
 		TxnHash        string `json:"TxnHash"`
-		PrevBlockHash  string `json:"prevBlockHash"`
 		Type           int64  `json:"type"`
 		Version        int64  `json:"version"`
 	} `json:"header"`
