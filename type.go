@@ -9,13 +9,14 @@ type Balance struct {
 // DsBlock ...
 type DsBlock struct {
 	Header struct {
-		BlockNum     string `json:"blockNum"`
-		Difficulty   int64  `json:"difficulty"`
-		LeaderPubKey string `json:"leaderPubKey"`
-		MinerPubKey  string `json:"minerPubKey"`
-		Nonce        string `json:"nonce"`
-		Prevhash     string `json:"prevhash"`
-		Timestamp    string `json:"timestamp"`
+		BlockNum     string   `json:"blockNum"`
+		Difficulty   int64    `json:"difficulty"`
+		DifficultyDS int64    `json:"difficultyDS"`
+		GasPrice     string   `json:"gasPrice"`
+		LeaderPubKey string   `json:"leaderPubKey"`
+		PoWWinners   []string `json:"powWinners"`
+		Prevhash     string   `json:"prevhash"`
+		Timestamp    string   `json:"timestamp"`
 	} `json:"header"`
 	Signature string `json:"signature"`
 }
