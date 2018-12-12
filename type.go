@@ -36,7 +36,7 @@ type TxBlock struct {
 		MinerPubKey    string `json:"MinerPubKey"`
 		NumMicroBlocks int64  `json:"NumMicroBlocks"`
 		NumTxns        int64  `json:"NumTxns"`
-		PrevBlockHash  string `json:"prevBlockHash"`
+		PrevBlockHash  string `json:"PrevBlockHash"`
 		Rewards        string `json:"Rewards"`
 		StateDeltaHash string `json:"StateDeltaHash"`
 		StateRootHash  string `json:"StateRootHash"`
@@ -49,9 +49,15 @@ type TxBlock struct {
 
 // Transaction ...
 type Transaction struct {
-	ID           string `json:"ID"`
-	Amount       string `json:"amount"`
-	Nonce        string `json:"nonce"`
+	ID       string `json:"ID"`
+	Amount   string `json:"amount"`
+	GasLimit string `json:"gasLimit"`
+	GasPrice string `json:"gasPrice"`
+	Nonce    string `json:"nonce"`
+	Receipt  struct {
+		CumulativeGas string `json:"cumulative_gas"`
+		Success       bool   `json:"success"`
+	} `json:"receipt"`
 	SenderPubKey string `json:"senderPubKey"`
 	Signature    string `json:"signature"`
 	ToAddr       string `json:"toAddr"`

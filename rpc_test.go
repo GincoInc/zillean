@@ -107,14 +107,18 @@ func TestRPC_GetLatestTxBlock(t *testing.T) {
 
 func TestRPC_GetTransaction(t *testing.T) {
 	Convey("returns details of a Transaction by its hash", t, func() {
-		result, err := NewRPC(testNet).GetTransaction("b66a55133127d9718c12cfb022922c322e755b6e2e4027b96c0a0d9ae234fca5")
+		result, err := NewRPC(testNet).GetTransaction("a379c65e7373aec44e8c70f80891e135610d1e220329bce790e6d60b0e796854")
 		So(err, ShouldBeNil)
-		So(result.ID, ShouldEqual, "b66a55133127d9718c12cfb022922c322e755b6e2e4027b96c0a0d9ae234fca5")
+		So(result.ID, ShouldEqual, "a379c65e7373aec44e8c70f80891e135610d1e220329bce790e6d60b0e796854")
 		So(result.Amount, ShouldEqual, "1")
-		So(result.Nonce, ShouldEqual, "1")
-		So(result.SenderPubKey, ShouldEqual, "0x02E8DE95B63E9598894BF4C3CFBBB0D5333385D306CB06122DB47C292AA57A7281")
-		So(result.Signature, ShouldEqual, "0x0922D7C65FB9AA6CF85AC026DFB102288D91D6857487122C078FC04E2B6C991B47051BBBC4ECE99E8CB5C5CE6D0CC154979FEC952D0390E776C382240E44BEE5")
-		So(result.ToAddr, ShouldEqual, "c0767be67c4895ff347898d1a9f5266f63936b6a")
+		So(result.GasLimit, ShouldEqual, "1000")
+		So(result.GasPrice, ShouldEqual, "100")
+		So(result.Nonce, ShouldEqual, "2")
+		So(result.Receipt.CumulativeGas, ShouldEqual, "1")
+		So(result.Receipt.Success, ShouldBeTrue)
+		So(result.SenderPubKey, ShouldEqual, "0x02B12D89A6854DD4FAACB368E3580389554040C3CD6E2FCADD4A152B66228E6D0D")
+		So(result.Signature, ShouldEqual, "0x74925271BA02F9106F52287CAD89D06B58C9003AA0F03741B5D881FC9E4C79B000F3CD1E529B6B219D4FE6BDCF47F43850526C2ADBD73DB61A30684D1D762B45")
+		So(result.ToAddr, ShouldEqual, "88bb4def5d6989706b2f72858d6e5cbcd0331b93")
 		So(result.Version, ShouldEqual, "0")
 	})
 }
