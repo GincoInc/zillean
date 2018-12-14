@@ -63,11 +63,11 @@ func hash(Q []byte, pubKey []byte, msg []byte) []byte {
 	return crypto.Sha256(buffer.Bytes())
 }
 
-func generateDRN(entropy, nonce []byte) ([]byte, error) {
+func generateDRN(nonce []byte) ([]byte, error) {
 	var buffer bytes.Buffer
-	buffer.Write(make([]byte, 32))
+	buffer.Write(generateRandomBytes(32))
 	buffer.WriteString("Schnorr+SHA256  ")
-	hmacDRBG := crypto.NewHmacDRBG(entropy, nonce, buffer.Bytes())
+	hmacDRBG := crypto.NewHmacDRBG(generateRandomBytes(32), nonce, buffer.Bytes())
 
 	return hmacDRBG.Generate(int32(32), []byte{})
 }
