@@ -68,8 +68,8 @@ type Transaction struct {
 type RawTx struct {
 	Version   int32  `json:"version"`
 	Nonce     int32  `json:"nonce"`
-	To        string `json:"to"`
-	Amount    int64  `json:"amount"`
+	To        string `json:"toAddr"`
+	Amount    string `json:"amount"`
 	PubKey    string `json:"pubKey"`
 	GasPrice  int32  `json:"gasPrice"`
 	GasLimit  int32  `json:"gasLimit"`
