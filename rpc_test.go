@@ -2,7 +2,6 @@ package zillean
 
 import (
 	"encoding/hex"
-	"fmt"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -141,7 +140,6 @@ func TestRPC_CreateTransaction(t *testing.T) {
 		}
 		k, _ := hex.DecodeString("2a0db12cff92593b8f507bece9ef79d8e88e176678b7db11ba72a95b01616575")
 		signature, _ := zillean.SignTransaction(k, rawTx, privateKey)
-		fmt.Println(signature)
 		result, err := zillean.RPC.CreateTransaction(rawTx, signature)
 		So(err, ShouldBeNil)
 		So(result, ShouldEqual, "adf12a29a86d62c7036253b22f0b6b1d9956fd3171444a578e0532bb04f9b498")
