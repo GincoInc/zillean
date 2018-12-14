@@ -24,8 +24,8 @@ type DsBlock struct {
 // TxBlock ...
 type TxBlock struct {
 	Body struct {
-		HeaderSign string `json:"HeaderSign"`
-		//MicroBlockInfos []string `json:"MicroBlockInfos"`
+		HeaderSign      string        `json:"HeaderSign"`
+		MicroBlockInfos []interface{} `json:"MicroBlockInfos"`
 	} `json:"body"`
 	Header struct {
 		BlockNum       string `json:"BlockNum"`
