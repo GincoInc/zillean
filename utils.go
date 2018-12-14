@@ -2,6 +2,7 @@ package zillean
 
 import (
 	"bytes"
+	"crypto/rand"
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
@@ -69,4 +70,10 @@ func generateDRN(entropy, nonce []byte) ([]byte, error) {
 	hmacDRBG := crypto.NewHmacDRBG(entropy, nonce, buffer.Bytes())
 
 	return hmacDRBG.Generate(int32(32), []byte{})
+}
+
+func generateRandomBytes(size int32) []byte {
+	randomBytes := make([]byte, size)
+	_, _ = rand.Read(randomBytes)
+	return randomBytes
 }
