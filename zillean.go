@@ -101,11 +101,11 @@ func (z *Zillean) IsAddress(address string) bool {
 }
 
 // SignTransaction ...
-func (z *Zillean) SignTransaction(rawTx RawTransaction, privateKey string) (string, error) {
+func (z *Zillean) SignTransaction(k []byte, rawTx RawTransaction, privateKey string) (string, error) {
 	privKey, _ := hex.DecodeString(privateKey)
-	_privKey := make([]byte, len(privKey))
-	copy(_privKey, privKey)
-	k, _ := generateDRN(_privKey, encodeTransaction(rawTx))
+	//_privKey := make([]byte, len(privKey))
+	//copy(_privKey, privKey)
+	//k, _ := generateDRN(_privKey, encodeTransaction(rawTx))
 
 	pubKey, _ := hex.DecodeString(rawTx.PubKey)
 	r, s, err := z.ECS.Sign(privKey, pubKey, k, encodeTransaction(rawTx))

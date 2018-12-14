@@ -1,6 +1,8 @@
 package zillean
 
 import (
+	"encoding/hex"
+	"fmt"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -126,21 +128,23 @@ func TestRPC_GetTransaction(t *testing.T) {
 func TestRPC_CreateTransaction(t *testing.T) {
 	Convey("returns a hash of created Transaction", t, func() {
 		zillean := NewZillean(testNet)
-		privateKey := "729a77d87bf12e9445733a73961bbacdb93dbc6e175abaea948066ded6c9490a"
+		privateKey := "79C4793303CDC5C98A9086AA39BDCA60C4140A4B8BE29897781931F38FB5001C"
 		publicKey, _ := zillean.GetPublicKeyFromPrivateKey(privateKey)
 		rawTx := RawTransaction{
 			Version:  0,
-			Nonce:    2,
-			To:       "ddff7b0fc10892deab8862514649bbc4757621f8",
+			Nonce:    1,
+			To:       "FE90767E34BB8E0D33E9B98529FA34F89280B078",
 			Amount:   "1",
 			PubKey:   publicKey,
-			GasPrice: 1,
-			GasLimit: 1,
+			GasPrice: 100,
+			GasLimit: 100,
 		}
-		signature, _ := zillean.SignTransaction(rawTx, privateKey)
+		k, _ := hex.DecodeString("2a0db12cff92593b8f507bece9ef79d8e88e176678b7db11ba72a95b01616575")
+		signature, _ := zillean.SignTransaction(k, rawTx, privateKey)
+		fmt.Println(signature)
 		result, err := zillean.RPC.CreateTransaction(rawTx, signature)
 		So(err, ShouldBeNil)
-		So(result, ShouldEqual, "ec69ac01c3b7eb7026d5254c897db96584605f4765d623555582b22bfe4c3bb1")
+		So(result, ShouldEqual, "adf12a29a86d62c7036253b22f0b6b1d9956fd3171444a578e0532bb04f9b498")
 	})
 }
 
