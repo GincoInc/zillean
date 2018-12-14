@@ -2,7 +2,6 @@ package zillean
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/GincoInc/jsonrpc"
 )
@@ -119,7 +118,6 @@ func (r *RPC) GetTransaction(txHash string) (*Transaction, error) {
 // See https://github.com/Zilliqa/Zilliqa-JavaScript-Library/#createtransactionjson in javascript
 // for an example of how to construct the transaction object.
 func (r *RPC) CreateTransaction(rawTx RawTransaction, signature string) (string, error) {
-	//amount, _ := strconv.ParseInt(rawTx.Amount, 10, 64)
 	resp, err := r.client.Call("CreateTransaction", []interface{}{RawTx{
 		Version:   rawTx.Version,
 		Nonce:     rawTx.Nonce,
@@ -130,7 +128,7 @@ func (r *RPC) CreateTransaction(rawTx RawTransaction, signature string) (string,
 		GasLimit:  rawTx.GasLimit,
 		Signature: signature,
 	}})
-	fmt.Println(resp)
+
 	if err != nil {
 		return "", err
 	}
