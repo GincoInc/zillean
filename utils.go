@@ -5,8 +5,11 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
+	"strconv"
 
 	crypto "github.com/GincoInc/go-crypto"
+	zillean "github.com/KazutakaNagata/zillean/proto"
+	"github.com/golang/protobuf/proto"
 )
 
 func publicKeyToAddress(publicKey []byte) string {
@@ -14,25 +17,32 @@ func publicKeyToAddress(publicKey []byte) string {
 }
 
 func encodeTransaction(rawTx RawTransaction) []byte {
-	var buffer bytes.Buffer
-	buffer.Write(int32ToPaddedBytes(rawTx.Version, 64))
-	buffer.Write(int32ToPaddedBytes(rawTx.Nonce, 64))
-	to, _ := hex.DecodeString(rawTx.To)
-	buffer.Write(to)
-	pubKey, _ := hex.DecodeString(rawTx.PubKey)
-	buffer.Write(pubKey)
-	amount, _ := hex.DecodeString(fmt.Sprintf("%064s", rawTx.Amount))
-	buffer.Write(amount)
-	buffer.Write(int32ToPaddedBytes(rawTx.GasPrice, 64))
-	buffer.Write(int32ToPaddedBytes(rawTx.GasLimit, 64))
-	buffer.Write(int32ToPaddedBytes(int32(len(rawTx.Code)), 8))
-	code, _ := hex.DecodeString(rawTx.Code)
-	buffer.Write(code)
-	buffer.Write(int32ToPaddedBytes(int32(len(rawTx.Data)), 8))
-	data, _ := hex.DecodeString(rawTx.Data)
-	buffer.Write(data)
+	version := uint32(rawTx.Version)
+	nonce := uint64(rawTx.Nonce)
+	toAddr, _ := hex.DecodeString(rawTx.To)
+	_pubKey, _ := hex.DecodeString(rawTx.PubKey)
+	pubKey := zillean.ByteArray{Data: _pubKey}
+	_amount, _ := strconv.ParseInt(rawTx.Amount, 10, 32)
+	amount := zillean.ByteArray{Data: int32ToPaddedBytes(int32(_amount), 32)}
+	gasPrice := zillean.ByteArray{Data: int32ToPaddedBytes(rawTx.GasPrice, 32)}
+	gasLimit := uint64(rawTx.GasLimit)
+	code := []byte(rawTx.Code)
+	data := []byte(rawTx.Data)
 
-	return buffer.Bytes()
+	protoTxCoreInfo := zillean.ProtoTransactionCoreInfo{
+		Version:      &version,
+		Nonce:        &nonce,
+		Toaddr:       toAddr,
+		Senderpubkey: &pubKey,
+		Amount:       &amount,
+		Gasprice:     &gasPrice,
+		Gaslimit:     &gasLimit,
+		Code:         code,
+		Data:         data,
+	}
+	encodedTx, _ := proto.Marshal(&protoTxCoreInfo)
+
+	return encodedTx
 }
 
 func int32ToPaddedBytes(i, paddedSize int32) []byte {
