@@ -153,11 +153,14 @@ func TestRPC_GetSmartContracts(t *testing.T) {
 	})
 }
 
-// func TestRPC_GetSmartContractState(t *testing.T) {
-// 	Convey("returns the state variables (mutable) of a smart contract address", t, func() {
-// 		// TODO
-// 	})
-// }
+func TestRPC_GetSmartContractState(t *testing.T) {
+	Convey("returns the state variables (mutable) of a smart contract address", t, func() {
+		// TODO create smart contract for testing use
+		result, err := NewRPC(testNetScilla).GetSmartContractState("dbe59ad379c07b3f50187fb91e8472a34fa4a33f")
+		So(err, ShouldBeNil)
+		So(len(result), ShouldEqual, 2)
+	})
+}
 
 // func TestRPC_GetSmartContractCode(t *testing.T) {
 // 	Convey("returns the Scilla code of a smart contract address", t, func() {

@@ -113,12 +113,15 @@ type ListedBlocks struct {
 
 // SmartContract ...
 type SmartContract struct {
-	Address string `json:"address"`
-	State   []struct {
-		Type  string `json:"type"`
-		Value string `json:"value"`
-		Vname string `json:"vname"`
-	}
+	Address string               `json:"address"`
+	State   []SmartContractState `json:"state"`
+}
+
+// SmartContractState ...
+type SmartContractState struct {
+	Type  string `json:"type"`
+	Value string `json:"value"`
+	Vname string `json:"vname"`
 }
 
 // RawTransaction ...

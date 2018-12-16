@@ -2,7 +2,6 @@ package zillean
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/GincoInc/jsonrpc"
 )
@@ -153,7 +152,7 @@ func (r *RPC) GetSmartContracts(address string) ([]SmartContract, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(resp)
+
 	if resp.Error != nil {
 		return nil, errors.New(resp.Error.Message)
 	}
@@ -165,7 +164,7 @@ func (r *RPC) GetSmartContracts(address string) ([]SmartContract, error) {
 
 // GetSmartContractState returns  the state variables (mutable) of a smart contract address.
 // TODO
-func (r *RPC) GetSmartContractState(contractAddress string) (*Transaction, error) {
+func (r *RPC) GetSmartContractState(contractAddress string) ([]SmartContractState, error) {
 	resp, err := r.client.Call("GetSmartContractState", []interface{}{contractAddress})
 	if err != nil {
 		return nil, err
@@ -175,9 +174,9 @@ func (r *RPC) GetSmartContractState(contractAddress string) (*Transaction, error
 		return nil, errors.New(resp.Error.Message)
 	}
 
-	var result Transaction
+	var result []SmartContractState
 	resp.GetObject(&result)
-	return &result, nil
+	return result, nil
 }
 
 // GetSmartContractCode returns the Scilla code of a smart contract address.
