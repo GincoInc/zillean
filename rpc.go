@@ -198,7 +198,7 @@ func (r *RPC) GetSmartContractCode(contractAddress string) (string, error) {
 
 // GetSmartContractInit returns the initialization parameters (immutable) of a given smart contract address.
 // TODO
-func (r *RPC) GetSmartContractInit(contractAddress string) (*Transaction, error) {
+func (r *RPC) GetSmartContractInit(contractAddress string) ([]SmartContractState, error) {
 	resp, err := r.client.Call("GetSmartContractInit", []interface{}{contractAddress})
 	if err != nil {
 		return nil, err
@@ -208,9 +208,9 @@ func (r *RPC) GetSmartContractInit(contractAddress string) (*Transaction, error)
 		return nil, errors.New(resp.Error.Message)
 	}
 
-	var result Transaction
+	var result []SmartContractState
 	resp.GetObject(&result)
-	return &result, nil
+	return result, nil
 }
 
 // GetBlockchainInfo returns statistics about the specified zilliqa node.

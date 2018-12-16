@@ -171,11 +171,14 @@ func TestRPC_GetSmartContractCode(t *testing.T) {
 	})
 }
 
-// func TestRPC_GetSmartContractInit(t *testing.T) {
-// 	Convey("returns the initialization parameters (immutable) of a given smart contract address", t, func() {
-// 		// TODO
-// 	})
-// }
+func TestRPC_GetSmartContractInit(t *testing.T) {
+	Convey("returns the initialization parameters (immutable) of a given smart contract address", t, func() {
+		// TODO create smart contract for testing use
+		result, err := NewRPC(testNetScilla).GetSmartContractInit("dbe59ad379c07b3f50187fb91e8472a34fa4a33f")
+		So(err, ShouldBeNil)
+		So(len(result), ShouldEqual, 3)
+	})
+}
 
 func TestRPC_GetBlockchainInfo(t *testing.T) {
 	Convey("returns statistics about the specified zilliqa node", t, func() {
