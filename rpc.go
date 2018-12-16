@@ -163,7 +163,6 @@ func (r *RPC) GetSmartContracts(address string) ([]SmartContract, error) {
 }
 
 // GetSmartContractState returns  the state variables (mutable) of a smart contract address.
-// TODO
 func (r *RPC) GetSmartContractState(contractAddress string) ([]SmartContractState, error) {
 	resp, err := r.client.Call("GetSmartContractState", []interface{}{contractAddress})
 	if err != nil {
@@ -180,20 +179,21 @@ func (r *RPC) GetSmartContractState(contractAddress string) ([]SmartContractStat
 }
 
 // GetSmartContractCode returns the Scilla code of a smart contract address.
-// TODO
-func (r *RPC) GetSmartContractCode(contractAddress string) (*Transaction, error) {
+func (r *RPC) GetSmartContractCode(contractAddress string) (string, error) {
 	resp, err := r.client.Call("GetSmartContractCode", []interface{}{contractAddress})
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	if resp.Error != nil {
-		return nil, errors.New(resp.Error.Message)
+		return "", errors.New(resp.Error.Message)
 	}
 
-	var result Transaction
+	var result struct {
+		Code string `json:"code"`
+	}
 	resp.GetObject(&result)
-	return &result, nil
+	return result.Code, nil
 }
 
 // GetSmartContractInit returns the initialization parameters (immutable) of a given smart contract address.
