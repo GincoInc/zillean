@@ -2,6 +2,7 @@ package zillean
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/GincoInc/jsonrpc"
 )
@@ -146,20 +147,20 @@ func (r *RPC) CreateTransaction(rawTx RawTransaction, signature string) (string,
 }
 
 // GetSmartContracts returns the list of smart contracts created by an address.
-// TODO
-func (r *RPC) GetSmartContracts(contractAddress string) (*Transaction, error) {
-	resp, err := r.client.Call("GetSmartContracts", []interface{}{contractAddress})
+// @param address: address that deploys the smart contracts
+func (r *RPC) GetSmartContracts(address string) ([]SmartContract, error) {
+	resp, err := r.client.Call("GetSmartContracts", []interface{}{address})
 	if err != nil {
 		return nil, err
 	}
-
+	fmt.Println(resp)
 	if resp.Error != nil {
 		return nil, errors.New(resp.Error.Message)
 	}
 
-	var result Transaction
+	var result []SmartContract
 	resp.GetObject(&result)
-	return &result, nil
+	return result, nil
 }
 
 // GetSmartContractState returns  the state variables (mutable) of a smart contract address.

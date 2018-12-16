@@ -144,11 +144,14 @@ func TestRPC_CreateTransaction(t *testing.T) {
 	})
 }
 
-// func TestRPC_GetSmartContracts(t *testing.T) {
-// 	Convey("returns the list of smart contracts created by an address", t, func() {
-// 		// TODO
-// 	})
-// }
+func TestRPC_GetSmartContracts(t *testing.T) {
+	Convey("returns the list of smart contracts created by an address", t, func() {
+		// TODO create smart contract for testing use
+		result, err := NewRPC(testNetScilla).GetSmartContracts("1D3FE113A0362BA2D63BF0BF41AFCA5A9921AB52")
+		So(err, ShouldBeNil)
+		So(len(result), ShouldEqual, 2)
+	})
+}
 
 // func TestRPC_GetSmartContractState(t *testing.T) {
 // 	Convey("returns the state variables (mutable) of a smart contract address", t, func() {

@@ -111,6 +111,16 @@ type ListedBlocks struct {
 	MaxPages int64 `json:"maxPages"`
 }
 
+// SmartContract ...
+type SmartContract struct {
+	Address string `json:"address"`
+	State   []struct {
+		Type  string `json:"type"`
+		Value string `json:"value"`
+		Vname string `json:"vname"`
+	}
+}
+
 // RawTransaction ...
 type RawTransaction struct {
 	Version  int32
