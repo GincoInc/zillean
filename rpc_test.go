@@ -147,7 +147,7 @@ func TestRPC_CreateTransaction(t *testing.T) {
 func TestRPC_GetSmartContracts(t *testing.T) {
 	Convey("returns the list of smart contracts created by an address", t, func() {
 		// TODO create smart contract for testing use
-		result, err := NewRPC(testNetScilla).GetSmartContracts("1D3FE113A0362BA2D63BF0BF41AFCA5A9921AB52")
+		result, err := NewRPC(testNet).GetSmartContracts("1D3FE113A0362BA2D63BF0BF41AFCA5A9921AB52")
 		So(err, ShouldBeNil)
 		So(len(result), ShouldEqual, 2)
 	})
@@ -156,7 +156,7 @@ func TestRPC_GetSmartContracts(t *testing.T) {
 func TestRPC_GetSmartContractState(t *testing.T) {
 	Convey("returns the state variables (mutable) of a smart contract address", t, func() {
 		// TODO create smart contract for testing use
-		result, err := NewRPC(testNetScilla).GetSmartContractState("dbe59ad379c07b3f50187fb91e8472a34fa4a33f")
+		result, err := NewRPC(testNet).GetSmartContractState("dbe59ad379c07b3f50187fb91e8472a34fa4a33f")
 		So(err, ShouldBeNil)
 		So(len(result), ShouldEqual, 2)
 	})
@@ -165,7 +165,7 @@ func TestRPC_GetSmartContractState(t *testing.T) {
 func TestRPC_GetSmartContractCode(t *testing.T) {
 	Convey("returns the Scilla code of a smart contract address", t, func() {
 		// TODO create smart contract for testing use
-		result, err := NewRPC(testNetScilla).GetSmartContractCode("dbe59ad379c07b3f50187fb91e8472a34fa4a33f")
+		result, err := NewRPC(testNet).GetSmartContractCode("dbe59ad379c07b3f50187fb91e8472a34fa4a33f")
 		So(err, ShouldBeNil)
 		So(result, ShouldEqual, "scilla_version 0\n\n    (* HelloWorld contract *)\n\n    import ListUtils\n\n    (***************************************************)\n    (*               Associated library                *)\n    (***************************************************)\n    library HelloWorld\n\n    let one_msg = \n      fun (msg : Message) => \n      let nil_msg = Nil {Message} in\n      Cons {Message} msg nil_msg\n\n    let not_owner_code = Int32 1\n    let set_hello_code = Int32 2\n\n    (***************************************************)\n    (*             The contract definition             *)\n    (***************************************************)\n\n    contract HelloWorld\n    (owner: ByStr20)\n\n    field welcome_msg : String = \"\"\n\n    transition setHello (msg : String)\n      is_owner = builtin eq owner _sender;\n      match is_owner with\n      | False =>\n        msg = {_tag : \"Main\"; _recipient : _sender; _amount : Uint128 0; code : not_owner_code};\n        msgs = one_msg msg;\n        send msgs\n      | True =>\n        welcome_msg := msg;\n        msg = {_tag : \"Main\"; _recipient : _sender; _amount : Uint128 0; code : set_hello_code};\n        msgs = one_msg msg;\n        send msgs\n      end\n    end\n\n\n    transition getHello ()\n        r <- welcome_msg;\n        e = {_eventname: \"getHello()\"; msg: r};\n        event e\n    end")
 	})
@@ -174,7 +174,7 @@ func TestRPC_GetSmartContractCode(t *testing.T) {
 func TestRPC_GetSmartContractInit(t *testing.T) {
 	Convey("returns the initialization parameters (immutable) of a given smart contract address", t, func() {
 		// TODO create smart contract for testing use
-		result, err := NewRPC(testNetScilla).GetSmartContractInit("dbe59ad379c07b3f50187fb91e8472a34fa4a33f")
+		result, err := NewRPC(testNet).GetSmartContractInit("dbe59ad379c07b3f50187fb91e8472a34fa4a33f")
 		So(err, ShouldBeNil)
 		So(len(result), ShouldEqual, 3)
 	})
