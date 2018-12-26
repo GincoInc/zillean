@@ -146,10 +146,12 @@ func TestRPC_CreateTransaction(t *testing.T) {
 
 func TestRPC_GetSmartContracts(t *testing.T) {
 	Convey("returns the list of smart contracts created by an address", t, func() {
-		// TODO create smart contract for testing use
-		result, err := NewRPC(testNet).GetSmartContracts("1D3FE113A0362BA2D63BF0BF41AFCA5A9921AB52")
+		result, err := NewRPC(testNet).GetSmartContracts("f3d2005b55102d6588dd9771e9356f1908c9d97f")
 		So(err, ShouldBeNil)
-		So(len(result), ShouldEqual, 2)
+		So(result[0].Address, ShouldEqual, "83536f90ed096b5d14ba2c296a32f37849dd3221")
+		So(result[0].State[0].Type, ShouldEqual, "Uint128")
+		So(result[0].State[0].Value, ShouldEqual, "0")
+		So(result[0].State[0].Vname, ShouldEqual, "_balance")
 	})
 }
 
