@@ -40,21 +40,13 @@ func (ecs *ECSchnorr) GetPublicKey(privKey []byte, compress bool) []byte {
 	return crypto.Marshal(ecs.Curve, pubx, puby, compress)
 }
 
-/*
-Sign returns the signature (r, s) on a given message.
-
-The algorithm takes the following step:
-
-1. Take a radom k as an input
-
-2. Compute the commitment Q = kG, where  G is the base point
-
-3. Compute the challenge r = H(Q, pubKey, msg)
-
-4. Compute s = k - r * privKey mod n
-
-5. Signature on m is (r, s)
-*/
+// Sign returns the signature (r, s) on a given message.
+// The algorithm takes the following step:
+// 1. Take a radom k as an input
+// 2. Compute the commitment Q = kG, where  G is the base point
+// 3. Compute the challenge r = H(Q, pubKey, msg)
+// 4. Compute s = k - r * privKey mod n
+// 5. Signature on m is (r, s)
 func (ecs *ECSchnorr) Sign(privKey, pubKey, k, msg []byte) ([]byte, []byte, error) {
 	// 1. Take a radom k as an input
 	_k := new(big.Int).SetBytes(k)
@@ -84,17 +76,11 @@ func (ecs *ECSchnorr) Sign(privKey, pubKey, k, msg []byte) ([]byte, []byte, erro
 	return r.Bytes(), s.Bytes(), nil
 }
 
-/*
-Verify returns a boolean that implies whether a given signature is successfully verified or not.
-
-The algorithm takes the following steps:
-
-1. Compute Q = sG + r * pubKey
-
-2. r' = H(Q, kpub, m)
-
-3. return r' == r
-*/
+// Verify returns a boolean that implies whether a given signature is successfully verified or not.
+// The algorithm takes the following steps:
+// 1. Compute Q = sG + r * pubKey
+// 2. r' = H(Q, kpub, m)
+// 3. return r' == r
 func (ecs *ECSchnorr) Verify(r, s, pubKey, msg []byte) bool {
 	pkx, pky := elliptic.Unmarshal(ecs.Curve, pubKey)
 	rpkx, rpky := ecs.Curve.ScalarMult(pkx, pky, r)

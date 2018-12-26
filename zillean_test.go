@@ -137,7 +137,7 @@ func TestEncodeTransaction(t *testing.T) {
 			Data:     "abcde",
 		}
 		encodedTx, _ := hex.DecodeString("080a10101a14fe90767e34bb8e0d33e9b98529fa34f89280b07822230a2103ad5893983179a55c466d94995de934140ef3cb610526aedfac214db7ec8e09462a120a100000000000000000000000000000006432120a100000000000000000000000000000005838f8064205616975656f4a056162636465")
-		So(encodeTransaction(rawTx), ShouldResemble, encodedTx)
+		So(EncodeTransaction(rawTx), ShouldResemble, encodedTx)
 	})
 }
 

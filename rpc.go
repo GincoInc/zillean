@@ -11,7 +11,7 @@ type RPC struct {
 	client *jsonrpc.RPCClient
 }
 
-// NewRPC returns a new zilliean.RPC.
+// NewRPC returns a new RPC object.
 func NewRPC(endpoint string) *RPC {
 	return &RPC{
 		client: jsonrpc.NewRPCClient(endpoint),
@@ -146,7 +146,6 @@ func (r *RPC) CreateTransaction(rawTx RawTransaction, signature string) (string,
 }
 
 // GetSmartContracts returns the list of smart contracts created by an address.
-// @param address: address that deploys the smart contracts
 func (r *RPC) GetSmartContracts(address string) ([]SmartContract, error) {
 	resp, err := r.client.Call("GetSmartContracts", []interface{}{address})
 	if err != nil {
@@ -197,7 +196,6 @@ func (r *RPC) GetSmartContractCode(contractAddress string) (string, error) {
 }
 
 // GetSmartContractInit returns the initialization parameters (immutable) of a given smart contract address.
-// TODO
 func (r *RPC) GetSmartContractInit(contractAddress string) ([]SmartContractState, error) {
 	resp, err := r.client.Call("GetSmartContractInit", []interface{}{contractAddress})
 	if err != nil {

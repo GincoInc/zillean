@@ -29,12 +29,12 @@ func NewZillean(endpoint string) *Zillean {
 	}
 }
 
-// GeneratePrivateKey ...
+// GeneratePrivateKey returns string which represents a generated private key.
 func (z *Zillean) GeneratePrivateKey() string {
 	return fmt.Sprintf("%x", z.ECS.GeneratePrivateKey())
 }
 
-// VerifyPrivateKey ...
+// VerifyPrivateKey verifies a EC-Schnorr private key.
 func (z *Zillean) VerifyPrivateKey(privateKey string) (bool, error) {
 	privKey, err := hex.DecodeString(privateKey)
 	if err != nil {
@@ -61,7 +61,7 @@ func (z *Zillean) VerifyPrivateKey(privateKey string) (bool, error) {
 	return true, nil
 }
 
-// GetPublicKeyFromPrivateKey ...
+// GetPublicKeyFromPrivateKey returns the public key derived from a private key.
 func (z *Zillean) GetPublicKeyFromPrivateKey(privateKey string) (string, error) {
 	privKey, err := hex.DecodeString(privateKey)
 	if err != nil {
@@ -71,12 +71,12 @@ func (z *Zillean) GetPublicKeyFromPrivateKey(privateKey string) (string, error) 
 	return fmt.Sprintf("%x", z.ECS.GetPublicKey(privKey, true)), nil
 }
 
-// IsPublicKey ...
+// IsPublicKey checks whether a given string is a public key or not.
 func (z *Zillean) IsPublicKey(publicKey string) bool {
 	return regexp.MustCompile(`^[0-9a-fA-F]{66}$`).MatchString(publicKey)
 }
 
-// GetAddressFromPrivateKey ...
+// GetAddressFromPrivateKey returns the address derived from a private key.
 func (z *Zillean) GetAddressFromPrivateKey(privateKey string) (string, error) {
 	privKey, err := hex.DecodeString(privateKey)
 	if err != nil {
@@ -86,7 +86,7 @@ func (z *Zillean) GetAddressFromPrivateKey(privateKey string) (string, error) {
 	return publicKeyToAddress(z.ECS.GetPublicKey(privKey, true)), nil
 }
 
-// GetAddressFromPublicKey ...
+// GetAddressFromPublicKey returns the address derived from a public key.
 func (z *Zillean) GetAddressFromPublicKey(publicKey string) (string, error) {
 	publicKeyBytes, err := hex.DecodeString(publicKey)
 	if err != nil {
@@ -96,20 +96,16 @@ func (z *Zillean) GetAddressFromPublicKey(publicKey string) (string, error) {
 	return publicKeyToAddress(publicKeyBytes), nil
 }
 
-// IsAddress ...
+// IsAddress checks whether a given string is an address or not.
 func (z *Zillean) IsAddress(address string) bool {
 	return regexp.MustCompile(`^[0-9a-fA-F]{40}$`).MatchString(address)
 }
 
-// SignTransaction ...
+// SignTransaction returns the EC-Schnorr signature on a raw transaction.
 func (z *Zillean) SignTransaction(k []byte, rawTx RawTransaction, privateKey string) (string, error) {
 	privKey, _ := hex.DecodeString(privateKey)
-	//_privKey := make([]byte, len(privKey))
-	//copy(_privKey, privKey)
-	//k, _ := generateDRN(_privKey, encodeTransaction(rawTx))
-
 	pubKey, _ := hex.DecodeString(rawTx.PubKey)
-	r, s, err := z.ECS.Sign(privKey, pubKey, k, encodeTransaction(rawTx))
+	r, s, err := z.ECS.Sign(privKey, pubKey, k, EncodeTransaction(rawTx))
 	if err != nil {
 		return "", err
 	}
@@ -117,7 +113,7 @@ func (z *Zillean) SignTransaction(k []byte, rawTx RawTransaction, privateKey str
 	return fmt.Sprintf("%x%x", r, s), nil
 }
 
-// VerifySignature ...
+// VerifySignature verifies a signature on a message.
 func (z *Zillean) VerifySignature(r, s, publicKey, msg []byte) bool {
 	return z.ECS.Verify(r, s, publicKey, msg)
 }

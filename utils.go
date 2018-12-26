@@ -16,7 +16,8 @@ func publicKeyToAddress(publicKey []byte) string {
 	return fmt.Sprintf("%x", crypto.Sha256(publicKey)[12:])
 }
 
-func encodeTransaction(rawTx RawTransaction) []byte {
+// EncodeTransaction ...
+func EncodeTransaction(rawTx RawTransaction) []byte {
 	toAddr, _ := hex.DecodeString(rawTx.To)
 	_pubKey, _ := hex.DecodeString(rawTx.PubKey)
 	pubKey := zillean.ByteArray{Data: _pubKey}
@@ -56,7 +57,8 @@ func hash(Q []byte, pubKey []byte, msg []byte) []byte {
 	return crypto.Sha256(buffer.Bytes())
 }
 
-func generateDRN(nonce []byte) ([]byte, error) {
+// GenerateDRN ...
+func GenerateDRN(nonce []byte) ([]byte, error) {
 	var buffer bytes.Buffer
 	buffer.Write(generateRandomBytes(32))
 	buffer.WriteString("Schnorr+SHA256  ")
