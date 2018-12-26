@@ -7,11 +7,6 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-var (
-	address        = "0x7f8A9ED7bA55A092A74105E5bD0Ec9C98e66051d"
-	invalidAddress = "InvalidAddress"
-)
-
 func TestNewRPC(t *testing.T) {
 	Convey("returns a new rpc", t, func() {
 		So(NewRPC(localNet), ShouldHaveSameTypeAs, &RPC{})
@@ -22,7 +17,7 @@ func TestRPC_GetBalance(t *testing.T) {
 	Convey("returns the balance and nonce of a given address", t, func() {
 		result, err := NewRPC(testNet).GetBalance("5568CF7C38334A4E960BC99D8F22C1E90645E5F2")
 		So(err, ShouldBeNil)
-		So(result.Balance, ShouldEqual, 1000000000000)
+		So(result.Balance, ShouldEqual, "1000000000000")
 		So(result.Nonce, ShouldEqual, 0)
 	})
 }

@@ -2,10 +2,10 @@ package zillean
 
 import "math/big"
 
-// Balance ...
+// Balance describes the balance for an account.
 type Balance struct {
-	Balance int64 `json:"balance,string"`
-	Nonce   int64 `json:"nonce,string"`
+	Balance string `json:"balance"`
+	Nonce   int64  `json:"nonce"`
 }
 
 // DsBlock ...
