@@ -8,7 +8,7 @@ type Balance struct {
 	Nonce   int64  `json:"nonce"`
 }
 
-// DsBlock ...
+// DsBlock describes a DS-Block.
 type DsBlock struct {
 	Header struct {
 		BlockNum     string   `json:"blockNum"`
@@ -23,7 +23,7 @@ type DsBlock struct {
 	Signature string `json:"signature"`
 }
 
-// TxBlock ...
+// TxBlock describes a TX-Block.
 type TxBlock struct {
 	Body struct {
 		HeaderSign      string `json:"HeaderSign"`
@@ -53,7 +53,7 @@ type TxBlock struct {
 	} `json:"header"`
 }
 
-// Transaction ...
+// Transaction describes a transaction object.
 type Transaction struct {
 	ID       string `json:"ID"`
 	Amount   string `json:"amount"`
@@ -70,7 +70,7 @@ type Transaction struct {
 	Version      string `json:"version"`
 }
 
-// RawTransaction ...
+// RawTransaction describes a raw transaction object, which can be used in creating a new transaction.
 type RawTransaction struct {
 	Version   uint32   `json:"version"`
 	Nonce     uint64   `json:"nonce"`
@@ -84,7 +84,7 @@ type RawTransaction struct {
 	Signature string   `json:"signature"`
 }
 
-// BlockchainInfo ...
+// BlockchainInfo describes the information about Zilliqa blockchain.
 type BlockchainInfo struct {
 	CurrentDSEpoch    string  `json:"CurrentDSEpoch"`
 	CurrentMiniEpoch  string  `json:"CurrentMiniEpoch"`
@@ -102,13 +102,13 @@ type BlockchainInfo struct {
 	TxBlockRate     float64 `json:"TxBlockRate"`
 }
 
-// RecentTransactions ...
+// RecentTransactions contains the most recent transactions (up to 100).
 type RecentTransactions struct {
 	TxnHashes []string `json:"TxnHashes"`
 	Number    int64    `json:"number"`
 }
 
-// ListedBlocks ...
+// ListedBlocks contains the paginated list of Blocks. This can be used for both DS-Blocks and TX-Blocks.
 type ListedBlocks struct {
 	Data []struct {
 		BlockNum int64  `json:"BlockNum"`
@@ -117,13 +117,13 @@ type ListedBlocks struct {
 	MaxPages int64 `json:"maxPages"`
 }
 
-// SmartContract ...
+// SmartContract describes the smart contracts created by an address.
 type SmartContract struct {
 	Address string               `json:"address"`
 	State   []SmartContractState `json:"state"`
 }
 
-// SmartContractState ...
+// SmartContractState describes the state of a smart contract.
 type SmartContractState struct {
 	Type  string `json:"type"`
 	Value string `json:"value"`

@@ -1,3 +1,4 @@
+// Package zillean is golang library for Zilliqa blockchain.
 package zillean
 
 import (
