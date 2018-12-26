@@ -17,8 +17,6 @@ func publicKeyToAddress(publicKey []byte) string {
 }
 
 func encodeTransaction(rawTx RawTransaction) []byte {
-	version := uint32(rawTx.Version)
-	nonce := uint64(rawTx.Nonce)
 	toAddr, _ := hex.DecodeString(rawTx.To)
 	_pubKey, _ := hex.DecodeString(rawTx.PubKey)
 	pubKey := zillean.ByteArray{Data: _pubKey}
@@ -26,20 +24,17 @@ func encodeTransaction(rawTx RawTransaction) []byte {
 	_amount.SetString(rawTx.Amount, 10)
 	amount := zillean.ByteArray{Data: bigIntToPaddedBytes(_amount, 32)}
 	gasPrice := zillean.ByteArray{Data: bigIntToPaddedBytes(rawTx.GasPrice, 32)}
-	gasLimit := uint64(rawTx.GasLimit)
-	code := []byte(rawTx.Code)
-	data := []byte(rawTx.Data)
 
 	protoTxCoreInfo := zillean.ProtoTransactionCoreInfo{
-		Version:      &version,
-		Nonce:        &nonce,
+		Version:      &rawTx.Version,
+		Nonce:        &rawTx.Nonce,
 		Toaddr:       toAddr,
 		Senderpubkey: &pubKey,
 		Amount:       &amount,
 		Gasprice:     &gasPrice,
-		Gaslimit:     &gasLimit,
-		Code:         code,
-		Data:         data,
+		Gaslimit:     &rawTx.GasLimit,
+		Code:         []byte(rawTx.Code),
+		Data:         []byte(rawTx.Data),
 	}
 	encodedTx, _ := proto.Marshal(&protoTxCoreInfo)
 

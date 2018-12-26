@@ -129,16 +129,3 @@ type SmartContractState struct {
 	Value string `json:"value"`
 	Vname string `json:"vname"`
 }
-
-// RawTransaction ...
-//type RawTransaction struct {
-//	Version  uint32
-//	Nonce    uint64
-//	To       string
-//	Amount   string
-//	PubKey   string
-//	GasPrice *big.Int
-//	GasLimit uint64
-//	Code     string
-//	Data     string
-//}
