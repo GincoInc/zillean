@@ -16,7 +16,7 @@ func publicKeyToAddress(publicKey []byte) string {
 	return fmt.Sprintf("%x", crypto.Sha256(publicKey)[12:])
 }
 
-// EncodeTransaction ...
+// EncodeTransaction encodes raw transaction using protobuf.
 func EncodeTransaction(rawTx RawTransaction) []byte {
 	toAddr, _ := hex.DecodeString(rawTx.To)
 	_pubKey, _ := hex.DecodeString(rawTx.PubKey)
@@ -57,7 +57,7 @@ func hash(Q []byte, pubKey []byte, msg []byte) []byte {
 	return crypto.Sha256(buffer.Bytes())
 }
 
-// GenerateDRN ...
+// GenerateDRN generates a random k for Schnorr signature.
 func GenerateDRN(nonce []byte) ([]byte, error) {
 	var buffer bytes.Buffer
 	buffer.Write(generateRandomBytes(32))
