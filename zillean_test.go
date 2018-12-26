@@ -3,6 +3,7 @@ package zillean
 import (
 	"encoding/hex"
 	"fmt"
+	"math/big"
 	"testing"
 
 	crypto "github.com/GincoInc/go-crypto"
@@ -111,7 +112,7 @@ func TestZillean_SignTransaction_And_Verify(t *testing.T) {
 			To:       "FE90767E34BB8E0D33E9B98529FA34F89280B078",
 			Amount:   "1",
 			PubKey:   "03AD5893983179A55C466D94995DE934140EF3CB610526AEDFAC214DB7EC8E0946",
-			GasPrice: 100,
+			GasPrice: big.NewInt(100),
 			GasLimit: 100,
 		}
 		k, _ := hex.DecodeString("775c54603d1954edd2229f43dadc6112b7c521578a8ba6caa536647148b31bab")
@@ -130,7 +131,7 @@ func TestEncodeTransaction(t *testing.T) {
 			To:       "FE90767E34BB8E0D33E9B98529FA34F89280B078",
 			Amount:   "100",
 			PubKey:   "03AD5893983179A55C466D94995DE934140EF3CB610526AEDFAC214DB7EC8E0946",
-			GasPrice: 88,
+			GasPrice: big.NewInt(88),
 			GasLimit: 888,
 			Code:     "aiueo",
 			Data:     "abcde",

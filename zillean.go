@@ -20,7 +20,7 @@ type Zillean struct {
 	RPC *RPC
 }
 
-// NewZillean returns a new zilliean.Zillean.
+// NewZillean returns a new Zillean.
 func NewZillean(endpoint string) *Zillean {
 	return &Zillean{
 		ECS: NewECSchnorr(),

@@ -1,5 +1,7 @@
 package zillean
 
+import "math/big"
+
 // Balance ...
 type Balance struct {
 	Balance int64 `json:"balance,string"`
@@ -68,18 +70,18 @@ type Transaction struct {
 	Version      string `json:"version"`
 }
 
-// RawTx ...
-type RawTx struct {
-	Version   int32  `json:"version"`
-	Nonce     int32  `json:"nonce"`
-	To        string `json:"toAddr"`
-	Amount    string `json:"amount"`
-	PubKey    string `json:"pubKey"`
-	GasPrice  int32  `json:"gasPrice"`
-	GasLimit  int32  `json:"gasLimit"`
-	Code      string `json:"code"`
-	Data      string `json:"data"`
-	Signature string `json:"signature"`
+// RawTransaction ...
+type RawTransaction struct {
+	Version   uint32   `json:"version"`
+	Nonce     uint64   `json:"nonce"`
+	To        string   `json:"toAddr"`
+	Amount    string   `json:"amount"`
+	PubKey    string   `json:"pubKey"`
+	GasPrice  *big.Int `json:"gasPrice"`
+	GasLimit  uint64   `json:"gasLimit"`
+	Code      string   `json:"code"`
+	Data      string   `json:"data"`
+	Signature string   `json:"signature"`
 }
 
 // BlockchainInfo ...
@@ -129,14 +131,14 @@ type SmartContractState struct {
 }
 
 // RawTransaction ...
-type RawTransaction struct {
-	Version  int32
-	Nonce    int32
-	To       string
-	Amount   string
-	PubKey   string
-	GasPrice int32
-	GasLimit int32
-	Code     string
-	Data     string
-}
+//type RawTransaction struct {
+//	Version  uint32
+//	Nonce    uint64
+//	To       string
+//	Amount   string
+//	PubKey   string
+//	GasPrice *big.Int
+//	GasLimit uint64
+//	Code     string
+//	Data     string
+//}

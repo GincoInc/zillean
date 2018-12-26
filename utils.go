@@ -3,10 +3,9 @@ package zillean
 import (
 	"bytes"
 	"crypto/rand"
-	"encoding/binary"
 	"encoding/hex"
 	"fmt"
-	"strconv"
+	"math/big"
 
 	crypto "github.com/GincoInc/go-crypto"
 	zillean "github.com/KazutakaNagata/zillean/proto"
@@ -23,9 +22,10 @@ func encodeTransaction(rawTx RawTransaction) []byte {
 	toAddr, _ := hex.DecodeString(rawTx.To)
 	_pubKey, _ := hex.DecodeString(rawTx.PubKey)
 	pubKey := zillean.ByteArray{Data: _pubKey}
-	_amount, _ := strconv.ParseInt(rawTx.Amount, 10, 32)
-	amount := zillean.ByteArray{Data: int32ToPaddedBytes(int32(_amount), 32)}
-	gasPrice := zillean.ByteArray{Data: int32ToPaddedBytes(rawTx.GasPrice, 32)}
+	_amount := &big.Int{}
+	_amount.SetString(rawTx.Amount, 10)
+	amount := zillean.ByteArray{Data: bigIntToPaddedBytes(_amount, 32)}
+	gasPrice := zillean.ByteArray{Data: bigIntToPaddedBytes(rawTx.GasPrice, 32)}
 	gasLimit := uint64(rawTx.GasLimit)
 	code := []byte(rawTx.Code)
 	data := []byte(rawTx.Data)
@@ -46,11 +46,9 @@ func encodeTransaction(rawTx RawTransaction) []byte {
 	return encodedTx
 }
 
-func int32ToPaddedBytes(i, paddedSize int32) []byte {
-	bytes := make([]byte, 4)
-	binary.BigEndian.PutUint32(bytes, uint32(i))
+func bigIntToPaddedBytes(i *big.Int, paddedSize int32) []byte {
+	bytes := i.Bytes()
 	padded, _ := hex.DecodeString(fmt.Sprintf("%0*x", paddedSize, bytes))
-
 	return padded
 }
 
