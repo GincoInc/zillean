@@ -172,7 +172,6 @@ func TestRPC_GetSmartContractCode(t *testing.T) {
 
 func TestRPC_GetSmartContractInit(t *testing.T) {
 	Convey("returns the initialization parameters (immutable) of a given smart contract address", t, func() {
-		// TODO create smart contract for testing use
 		result, err := NewRPC(testNet).GetSmartContractInit("83536f90ed096b5d14ba2c296a32f37849dd3221")
 		So(err, ShouldBeNil)
 		So(len(result), ShouldEqual, 3)
