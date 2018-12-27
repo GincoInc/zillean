@@ -3,6 +3,7 @@ package zillean
 import (
 	"encoding/hex"
 	"fmt"
+	"math/big"
 	"testing"
 
 	crypto "github.com/GincoInc/go-crypto"
@@ -11,7 +12,7 @@ import (
 
 const (
 	localNet = "http://127.0.0.1:4200"
-	testNet  = "https://scilla-test-api.aws.z7a.xyz"
+	testNet  = "https://api.zilliqa.com"
 	// testNet = "https://testnet-n-api.aws.zilliqa.com"
 	// testNet = "https://api-scilla.zilliqa.com"
 )
@@ -104,37 +105,39 @@ func TestZillean_IsAddress(t *testing.T) {
 
 func TestZillean_SignTransaction_And_Verify(t *testing.T) {
 	Convey("returns the signature", t, func() {
-		privateKey := "24180e6b0c3021aedb8f5a86f75276ee6fc7ff46e67e98e716728326102e91c9"
+		privateKey := "79C4793303CDC5C98A9086AA39BDCA60C4140A4B8BE29897781931F38FB5001C"
 		rawTx := RawTransaction{
-			Version:  8,
-			Nonce:    8,
-			To:       "0e3e927f8be54eb20f4f47baa2f4d23649433591",
-			Amount:   "378",
-			PubKey:   "04163fa604c65aebeb7048c5548875c11418d6d106a20a0289d67b59807abdd299d4cf0efcf07e96e576732dae122b9a8ac142214a6bc133b77aa5b79ba46b3e20",
-			GasPrice: 8,
-			GasLimit: 88,
+			Version:  0,
+			Nonce:    1,
+			To:       "FE90767E34BB8E0D33E9B98529FA34F89280B078",
+			Amount:   "1",
+			PubKey:   "03AD5893983179A55C466D94995DE934140EF3CB610526AEDFAC214DB7EC8E0946",
+			GasPrice: big.NewInt(100),
+			GasLimit: 100,
 		}
-
-		signature, err := NewZillean(localNet).SignTransaction(rawTx, privateKey)
+		k, _ := hex.DecodeString("775c54603d1954edd2229f43dadc6112b7c521578a8ba6caa536647148b31bab")
+		signature, err := NewZillean(localNet).SignTransaction(k, rawTx, privateKey)
 		So(err, ShouldBeNil)
-		So(signature[:64], ShouldEqual, "4664d452d23a069d558aece56a00a9a20cbb1ca2d93e886cd706e8f6aee016df")
-		So(signature[64:], ShouldEqual, "e80f47b43e6711c2495fbe618cc86bf045bc93d0a1c107ed89a7d45da3451f59")
+		So(signature[:64], ShouldEqual, "237f233c492a03ebddfad98e7a470fea894e9a68f30ab210f69ef9ade7dbacc3")
+		So(signature[64:], ShouldEqual, "5a1d4e7fa1d5b4956a41de54a35f683c15542f78b5c0f07e16d0154e462ef965")
 	})
 }
 
 func TestEncodeTransaction(t *testing.T) {
 	Convey("returns the encoded transaction", t, func() {
 		rawTx := RawTransaction{
-			Version:  8,
-			Nonce:    8,
-			To:       "cdaf201ca7057f1135bef25c41dda40d68032a4f",
-			Amount:   "378",
-			PubKey:   "02076f5b8511a3ad45a4856681ab66c0b8a979f44640036e752231298ed75ad48e",
-			GasPrice: 8,
-			GasLimit: 88,
+			Version:  10,
+			Nonce:    16,
+			To:       "FE90767E34BB8E0D33E9B98529FA34F89280B078",
+			Amount:   "100",
+			PubKey:   "03AD5893983179A55C466D94995DE934140EF3CB610526AEDFAC214DB7EC8E0946",
+			GasPrice: big.NewInt(88),
+			GasLimit: 888,
+			Code:     "aiueo",
+			Data:     "abcde",
 		}
-		encodedTx, _ := hex.DecodeString("00000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000008cdaf201ca7057f1135bef25c41dda40d68032a4f02076f5b8511a3ad45a4856681ab66c0b8a979f44640036e752231298ed75ad48e0000000000000000000000000000000000000000000000000000000000000378000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000580000000000000000")
-		So(encodeTransaction(rawTx), ShouldResemble, encodedTx)
+		encodedTx, _ := hex.DecodeString("080a10101a14fe90767e34bb8e0d33e9b98529fa34f89280b07822230a2103ad5893983179a55c466d94995de934140ef3cb610526aedfac214db7ec8e09462a120a100000000000000000000000000000006432120a100000000000000000000000000000005838f8064205616975656f4a056162636465")
+		So(EncodeTransaction(rawTx), ShouldResemble, encodedTx)
 	})
 }
 

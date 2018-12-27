@@ -2,44 +2,49 @@ package zillean
 
 import (
 	"bytes"
-	"encoding/binary"
+	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"math/big"
 
 	crypto "github.com/GincoInc/go-crypto"
+	zillean "github.com/KazutakaNagata/zillean/proto"
+	"github.com/golang/protobuf/proto"
 )
 
 func publicKeyToAddress(publicKey []byte) string {
 	return fmt.Sprintf("%x", crypto.Sha256(publicKey)[12:])
 }
 
-func encodeTransaction(rawTx RawTransaction) []byte {
-	var buffer bytes.Buffer
-	buffer.Write(int32ToPaddedBytes(rawTx.Version, 64))
-	buffer.Write(int32ToPaddedBytes(rawTx.Nonce, 64))
-	to, _ := hex.DecodeString(rawTx.To)
-	buffer.Write(to)
-	pubKey, _ := hex.DecodeString(rawTx.PubKey)
-	buffer.Write(pubKey)
-	amount, _ := hex.DecodeString(fmt.Sprintf("%064s", rawTx.Amount))
-	buffer.Write(amount)
-	buffer.Write(int32ToPaddedBytes(rawTx.GasPrice, 64))
-	buffer.Write(int32ToPaddedBytes(rawTx.GasLimit, 64))
-	buffer.Write(int32ToPaddedBytes(int32(len(rawTx.Code)), 8))
-	code, _ := hex.DecodeString(rawTx.Code)
-	buffer.Write(code)
-	buffer.Write(int32ToPaddedBytes(int32(len(rawTx.Data)), 8))
-	data, _ := hex.DecodeString(rawTx.Data)
-	buffer.Write(data)
+// EncodeTransaction encodes raw transaction using protobuf.
+func EncodeTransaction(rawTx RawTransaction) []byte {
+	toAddr, _ := hex.DecodeString(rawTx.To)
+	_pubKey, _ := hex.DecodeString(rawTx.PubKey)
+	pubKey := zillean.ByteArray{Data: _pubKey}
+	_amount := &big.Int{}
+	_amount.SetString(rawTx.Amount, 10)
+	amount := zillean.ByteArray{Data: bigIntToPaddedBytes(_amount, 32)}
+	gasPrice := zillean.ByteArray{Data: bigIntToPaddedBytes(rawTx.GasPrice, 32)}
 
-	return buffer.Bytes()
+	protoTxCoreInfo := zillean.ProtoTransactionCoreInfo{
+		Version:      &rawTx.Version,
+		Nonce:        &rawTx.Nonce,
+		Toaddr:       toAddr,
+		Senderpubkey: &pubKey,
+		Amount:       &amount,
+		Gasprice:     &gasPrice,
+		Gaslimit:     &rawTx.GasLimit,
+		Code:         []byte(rawTx.Code),
+		Data:         []byte(rawTx.Data),
+	}
+	encodedTx, _ := proto.Marshal(&protoTxCoreInfo)
+
+	return encodedTx
 }
 
-func int32ToPaddedBytes(i, paddedSize int32) []byte {
-	bytes := make([]byte, 4)
-	binary.BigEndian.PutUint32(bytes, uint32(i))
+func bigIntToPaddedBytes(i *big.Int, paddedSize int32) []byte {
+	bytes := i.Bytes()
 	padded, _ := hex.DecodeString(fmt.Sprintf("%0*x", paddedSize, bytes))
-
 	return padded
 }
 
@@ -52,11 +57,18 @@ func hash(Q []byte, pubKey []byte, msg []byte) []byte {
 	return crypto.Sha256(buffer.Bytes())
 }
 
-func generateDRN(entropy, nonce []byte) ([]byte, error) {
+// GenerateDRN generates a random k for Schnorr signature.
+func GenerateDRN(nonce []byte) ([]byte, error) {
 	var buffer bytes.Buffer
-	buffer.Write(make([]byte, 32))
+	buffer.Write(generateRandomBytes(32))
 	buffer.WriteString("Schnorr+SHA256  ")
-	hmacDRBG := crypto.NewHmacDRBG(entropy, nonce, buffer.Bytes())
+	hmacDRBG := crypto.NewHmacDRBG(generateRandomBytes(32), nonce, buffer.Bytes())
 
 	return hmacDRBG.Generate(int32(32), []byte{})
+}
+
+func generateRandomBytes(size int32) []byte {
+	randomBytes := make([]byte, size)
+	_, _ = rand.Read(randomBytes)
+	return randomBytes
 }

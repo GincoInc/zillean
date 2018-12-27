@@ -2,7 +2,6 @@ package zillean
 
 import (
 	"errors"
-	"strconv"
 
 	"github.com/GincoInc/jsonrpc"
 )
@@ -12,7 +11,7 @@ type RPC struct {
 	client *jsonrpc.RPCClient
 }
 
-// NewRPC returns a new zilliean.RPC.
+// NewRPC returns a new RPC object.
 func NewRPC(endpoint string) *RPC {
 	return &RPC{
 		client: jsonrpc.NewRPCClient(endpoint),
@@ -119,12 +118,11 @@ func (r *RPC) GetTransaction(txHash string) (*Transaction, error) {
 // See https://github.com/Zilliqa/Zilliqa-JavaScript-Library/#createtransactionjson in javascript
 // for an example of how to construct the transaction object.
 func (r *RPC) CreateTransaction(rawTx RawTransaction, signature string) (string, error) {
-	amount, _ := strconv.ParseInt(rawTx.Amount, 16, 64)
-	resp, err := r.client.Call("CreateTransaction", []interface{}{RawTx{
+	resp, err := r.client.Call("CreateTransaction", []interface{}{RawTransaction{
 		Version:   rawTx.Version,
 		Nonce:     rawTx.Nonce,
 		To:        rawTx.To,
-		Amount:    amount,
+		Amount:    rawTx.Amount,
 		PubKey:    rawTx.PubKey,
 		GasPrice:  rawTx.GasPrice,
 		GasLimit:  rawTx.GasLimit,
@@ -148,9 +146,8 @@ func (r *RPC) CreateTransaction(rawTx RawTransaction, signature string) (string,
 }
 
 // GetSmartContracts returns the list of smart contracts created by an address.
-// TODO
-func (r *RPC) GetSmartContracts(contractAddress string) (*Transaction, error) {
-	resp, err := r.client.Call("GetSmartContracts", []interface{}{contractAddress})
+func (r *RPC) GetSmartContracts(address string) ([]SmartContract, error) {
+	resp, err := r.client.Call("GetSmartContracts", []interface{}{address})
 	if err != nil {
 		return nil, err
 	}
@@ -159,14 +156,13 @@ func (r *RPC) GetSmartContracts(contractAddress string) (*Transaction, error) {
 		return nil, errors.New(resp.Error.Message)
 	}
 
-	var result Transaction
+	var result []SmartContract
 	resp.GetObject(&result)
-	return &result, nil
+	return result, nil
 }
 
 // GetSmartContractState returns  the state variables (mutable) of a smart contract address.
-// TODO
-func (r *RPC) GetSmartContractState(contractAddress string) (*Transaction, error) {
+func (r *RPC) GetSmartContractState(contractAddress string) ([]SmartContractState, error) {
 	resp, err := r.client.Call("GetSmartContractState", []interface{}{contractAddress})
 	if err != nil {
 		return nil, err
@@ -176,31 +172,31 @@ func (r *RPC) GetSmartContractState(contractAddress string) (*Transaction, error
 		return nil, errors.New(resp.Error.Message)
 	}
 
-	var result Transaction
+	var result []SmartContractState
 	resp.GetObject(&result)
-	return &result, nil
+	return result, nil
 }
 
 // GetSmartContractCode returns the Scilla code of a smart contract address.
-// TODO
-func (r *RPC) GetSmartContractCode(contractAddress string) (*Transaction, error) {
+func (r *RPC) GetSmartContractCode(contractAddress string) (string, error) {
 	resp, err := r.client.Call("GetSmartContractCode", []interface{}{contractAddress})
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	if resp.Error != nil {
-		return nil, errors.New(resp.Error.Message)
+		return "", errors.New(resp.Error.Message)
 	}
 
-	var result Transaction
+	var result struct {
+		Code string `json:"code"`
+	}
 	resp.GetObject(&result)
-	return &result, nil
+	return result.Code, nil
 }
 
 // GetSmartContractInit returns the initialization parameters (immutable) of a given smart contract address.
-// TODO
-func (r *RPC) GetSmartContractInit(contractAddress string) (*Transaction, error) {
+func (r *RPC) GetSmartContractInit(contractAddress string) ([]SmartContractState, error) {
 	resp, err := r.client.Call("GetSmartContractInit", []interface{}{contractAddress})
 	if err != nil {
 		return nil, err
@@ -210,9 +206,9 @@ func (r *RPC) GetSmartContractInit(contractAddress string) (*Transaction, error)
 		return nil, errors.New(resp.Error.Message)
 	}
 
-	var result Transaction
+	var result []SmartContractState
 	resp.GetObject(&result)
-	return &result, nil
+	return result, nil
 }
 
 // GetBlockchainInfo returns statistics about the specified zilliqa node.
