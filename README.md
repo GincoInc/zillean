@@ -79,10 +79,10 @@ func main() {
 - [x] GetLatestTxBlock
 - [x] GetTransaction
 - [x] CreateTransaction
-- [ ] GetSmartContracts
-- [ ] GetSmartContractState
-- [ ] GetSmartContractCode
-- [ ] GetSmartContractInit
+- [x] GetSmartContracts
+- [x] GetSmartContractState
+- [x] GetSmartContractCode
+- [x] GetSmartContractInit
 - [x] GetBlockchainInfo
 - [x] GetNetworkId
 - [x] GetRecentTransactions
