@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"math/big"
 
 	"github.com/GincoInc/zillean"
 )
 
 func main() {
 	// initialize the Zillean
-	zil := zillean.NewZillean("http://127.0.0.1:4200")
+	zil := zillean.NewZillean("https://api.zilliqa.com")
 
 	// generate a private key
 	privKey := zil.GeneratePrivateKey()
@@ -27,12 +28,13 @@ func main() {
 		Version:  0,
 		Nonce:    2,
 		To:       "to address",
-		Amount:   "1",
+		Amount:   "1000000000000",
 		PubKey:   pubKey,
-		GasPrice: 1,
+		GasPrice: big.NewInt(1000000000),
 		GasLimit: 1,
 	}
-	signature, _ := zil.SignTransaction(rawTx, privKey)
+	k, _ := zillean.GenerateDRN(zillean.EncodeTransaction(rawTx))
+	signature, _ := zil.SignTransaction(k, rawTx, privKey)
 	txID, _ := zil.RPC.CreateTransaction(rawTx, signature)
 	fmt.Printf("txID: %s\n", txID)
 }

@@ -8,7 +8,7 @@ import (
 	"math/big"
 
 	crypto "github.com/GincoInc/go-crypto"
-	zillean "github.com/KazutakaNagata/zillean/proto"
+	zillean "github.com/GincoInc/zillean/proto"
 	"github.com/golang/protobuf/proto"
 )
 
