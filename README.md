@@ -2,6 +2,7 @@
 [![GoDoc](https://godoc.org/github.com/GincoInc/zillean?status.svg)](https://godoc.org/github.com/GincoInc/zillean)
 [![Go Report Card](https://goreportcard.com/badge/github.com/GincoInc/zillean)](https://goreportcard.com/report/github.com/GincoInc/zillean)
 [![Build Status](https://travis-ci.org/GincoInc/zillean.svg?branch=develop)](https://travis-ci.org/GincoInc/zillean)
+
 A Golang implementation of [Zilliqa](https://github.com/Zilliqa/Zilliqa) API.
 
 The project is still under development. Please note that specifications may change greatly.
