@@ -1,4 +1,7 @@
 # Zilliqa Golang SDK
+[![GoDoc](https://godoc.org/github.com/GincoInc/zillean?status.svg)](https://godoc.org/github.com/GincoInc/zillean)
+[![Go Report Card](https://goreportcard.com/badge/github.com/GincoInc/zillean)](https://goreportcard.com/report/github.com/GincoInc/zillean)
+[![Build Status](https://travis-ci.org/GincoInc/zillean.svg?branch=develop)](https://travis-ci.org/GincoInc/zillean)
 A Golang implementation of [Zilliqa](https://github.com/Zilliqa/Zilliqa) API.
 
 The project is still under development. Please note that specifications may change greatly.
@@ -28,7 +31,7 @@ import (
 
 func main() {
 	// initialize the Zillean
-	zil := zillean.NewZillean("http://127.0.0.1:4200")
+	zil := zillean.NewZillean("https://api.zilliqa.com")
 
 	// generate a private key
 	privKey := zil.GeneratePrivateKey()
@@ -47,15 +50,15 @@ func main() {
 		Version:  0,
 		Nonce:    2,
 		To:       "to address",
-		Amount:   "1",
+		Amount:   "1000000000000",
 		PubKey:   pubKey,
-		GasPrice: 1,
+		GasPrice: big.NewInt(1000000000),
 		GasLimit: 1,
 	}
-	signature, _ := zil.SignTransaction(rawTx, privKey)
+	k, _ := zillean.GenerateDRN(zillean.EncodeTransaction(rawTx))
+	signature, _ := zil.SignTransaction(k, rawTx, privKey)
 	txID, _ := zil.RPC.CreateTransaction(rawTx, signature)
 	fmt.Printf("txID: %s\n", txID)
-}
 }
 ```
 
