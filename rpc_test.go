@@ -154,7 +154,7 @@ func TestRPC_GetSmartContracts(t *testing.T) {
 
 func TestRPC_GetSmartContractState(t *testing.T) {
 	Convey("returns the state variables (mutable) of a smart contract address", t, func() {
-		result, err := NewRPC(testNet).GetSmartContractState("83536f90ed096b5d14ba2c296a32f37849dd3221")
+		result, err := NewRPC(testNet).GetSmartContractState("2112d6eda5d539826e2a2f175d96a181791a34ab")
 		So(err, ShouldBeNil)
 		So(len(result), ShouldEqual, 1)
 		So(result[0].Type, ShouldEqual, "Uint128")
