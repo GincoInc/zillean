@@ -173,17 +173,17 @@ func TestRPC_GetSmartContractCode(t *testing.T) {
 
 func TestRPC_GetSmartContractInit(t *testing.T) {
 	Convey("returns the initialization parameters (immutable) of a given smart contract address", t, func() {
-		result, err := NewRPC(testNet).GetSmartContractInit("83536f90ed096b5d14ba2c296a32f37849dd3221")
+		result, err := NewRPC(testNet).GetSmartContractInit("2112d6eda5d539826e2a2f175d96a181791a34ab")
 		So(err, ShouldBeNil)
 		So(len(result), ShouldEqual, 3)
 		So(result[0].Type, ShouldEqual, "Uint32")
 		So(result[0].Value, ShouldEqual, "0")
 		So(result[0].Vname, ShouldEqual, "_scilla_version")
 		So(result[1].Type, ShouldEqual, "ByStr20")
-		So(result[1].Value, ShouldEqual, "0xf3d2005b55102d6588dd9771e9356f1908c9d97f")
+		So(result[1].Value, ShouldEqual, "0xf49f1306bc8fb0cd8167a58a3550c1443072e96b")
 		So(result[1].Vname, ShouldEqual, "owner")
 		So(result[2].Type, ShouldEqual, "BNum")
-		So(result[2].Value, ShouldEqual, "9247")
+		So(result[2].Value, ShouldEqual, "5143")
 		So(result[2].Vname, ShouldEqual, "_creation_block")
 	})
 }
