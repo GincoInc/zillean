@@ -15,7 +15,7 @@ func TestNewRPC(t *testing.T) {
 
 func TestRPC_GetBalance(t *testing.T) {
 	Convey("returns the balance and nonce of a given address", t, func() {
-		result, err := NewRPC(testNet).GetBalance("F49F1306BC8FB0CD8167A58A3550C1443072E96B")
+		result, err := NewRPC(testNet).GetBalance("546c73019def014ff2e363c4bc97de9ef90354fa")
 		So(err, ShouldBeNil)
 		So(result.Balance, ShouldEqual, "1000000000000")
 		So(result.Nonce, ShouldEqual, 0)
