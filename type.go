@@ -62,6 +62,7 @@ type Transaction struct {
 	Nonce    string `json:"nonce"`
 	Receipt  struct {
 		CumulativeGas string `json:"cumulative_gas"`
+		EpochNum      string `json:"epoch_num"`
 		Success       bool   `json:"success"`
 	} `json:"receipt"`
 	SenderPubKey string `json:"senderPubKey"`
