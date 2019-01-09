@@ -29,7 +29,13 @@ func NewECSchnorr() *ECSchnorr {
 // GeneratePrivateKey generates a new private key for Schnorr signature.
 func (ecs *ECSchnorr) GeneratePrivateKey() []byte {
 	b := make([]byte, 32)
-	rand.Read(b)
+	for {
+		rand.Read(b)
+		_b := new(big.Int).SetBytes(b)
+		if _b.Cmp(big.NewInt(0)) == 1 && _b.Cmp(ecs.Curve.Params().N) == -1 {
+			break
+		}
+	}
 	return b
 }
 
