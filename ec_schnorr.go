@@ -43,7 +43,10 @@ func (ecs *ECSchnorr) GetPublicKey(privKey []byte, compress bool) []byte {
 // Sign returns the signature (r, s) on a given message.
 func (ecs *ECSchnorr) Sign(privKey, pubKey, msg []byte) ([]byte, []byte) {
 	for {
-		k, _ := generateDRN(msg)
+		k, err := generateDRN(msg)
+		if err != nil {
+			continue
+		}
 		r, s, err := ecs.trySign(privKey, pubKey, k, msg)
 		if err == nil {
 			return r, s
