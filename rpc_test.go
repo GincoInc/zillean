@@ -132,8 +132,7 @@ func TestRPC_CreateTransaction(t *testing.T) {
 			GasPrice: big.NewInt(1000000000),
 			GasLimit: 1,
 		}
-		k, _ := GenerateDRN(EncodeTransaction(rawTx))
-		signature, _ := zillean.SignTransaction(k, rawTx, privateKey)
+		signature, _ := zillean.SignTransaction(rawTx, privateKey)
 		result, err := zillean.RPC.CreateTransaction(rawTx, signature)
 		So(err, ShouldBeNil)
 		So(result, ShouldEqual, "b25e05c30c53b2e2beeb67b5aad483069c18d1901b544fd63301dec6516873de")

@@ -103,7 +103,7 @@ func TestZillean_IsAddress(t *testing.T) {
 	})
 }
 
-func TestZillean_SignTransaction_And_Verify(t *testing.T) {
+func TestZillean_SignTransaction(t *testing.T) {
 	Convey("returns the signature", t, func() {
 		privateKey := "79C4793303CDC5C98A9086AA39BDCA60C4140A4B8BE29897781931F38FB5001C"
 		rawTx := RawTransaction{
@@ -115,11 +115,9 @@ func TestZillean_SignTransaction_And_Verify(t *testing.T) {
 			GasPrice: big.NewInt(100),
 			GasLimit: 100,
 		}
-		k, _ := hex.DecodeString("775c54603d1954edd2229f43dadc6112b7c521578a8ba6caa536647148b31bab")
-		signature, err := NewZillean(localNet).SignTransaction(k, rawTx, privateKey)
+		signature, err := NewZillean(localNet).SignTransaction(rawTx, privateKey)
 		So(err, ShouldBeNil)
-		So(signature[:64], ShouldEqual, "237f233c492a03ebddfad98e7a470fea894e9a68f30ab210f69ef9ade7dbacc3")
-		So(signature[64:], ShouldEqual, "5a1d4e7fa1d5b4956a41de54a35f683c15542f78b5c0f07e16d0154e462ef965")
+		So(signature, ShouldHaveLength, 128)
 	})
 }
 
@@ -137,7 +135,7 @@ func TestEncodeTransaction(t *testing.T) {
 			Data:     "abcde",
 		}
 		encodedTx, _ := hex.DecodeString("080a10101a14fe90767e34bb8e0d33e9b98529fa34f89280b07822230a2103ad5893983179a55c466d94995de934140ef3cb610526aedfac214db7ec8e09462a120a100000000000000000000000000000006432120a100000000000000000000000000000005838f8064205616975656f4a056162636465")
-		So(EncodeTransaction(rawTx), ShouldResemble, encodedTx)
+		So(encodeTransaction(rawTx), ShouldResemble, encodedTx)
 	})
 }
 

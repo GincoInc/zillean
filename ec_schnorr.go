@@ -41,13 +41,24 @@ func (ecs *ECSchnorr) GetPublicKey(privKey []byte, compress bool) []byte {
 }
 
 // Sign returns the signature (r, s) on a given message.
+func (ecs *ECSchnorr) Sign(privKey, pubKey, msg []byte) ([]byte, []byte) {
+	for {
+		k, _ := generateDRN(msg)
+		r, s, err := ecs.trySign(privKey, pubKey, k, msg)
+		if err == nil {
+			return r, s
+		}
+	}
+}
+
+// trySign tries to return the signature (r, s) on a given message.
 // The algorithm takes the following step:
 // 1. Take a radom k as an input
 // 2. Compute the commitment Q = kG, where  G is the base point
 // 3. Compute the challenge r = H(Q, pubKey, msg)
 // 4. Compute s = k - r * privKey mod n
 // 5. Signature on m is (r, s)
-func (ecs *ECSchnorr) Sign(privKey, pubKey, k, msg []byte) ([]byte, []byte, error) {
+func (ecs *ECSchnorr) trySign(privKey, pubKey, k, msg []byte) ([]byte, []byte, error) {
 	// 1. Take a radom k as an input
 	_k := new(big.Int).SetBytes(k)
 	if _k.Cmp(big.NewInt(0)) == 0 || _k.Cmp(ecs.Curve.Params().N) >= 0 {
