@@ -33,8 +33,7 @@ func main() {
 		GasPrice: big.NewInt(1000000000),
 		GasLimit: 1,
 	}
-	k, _ := zillean.GenerateDRN(zillean.EncodeTransaction(rawTx))
-	signature, _ := zil.SignTransaction(k, rawTx, privKey)
+	signature, _ := zil.SignTransaction(rawTx, privKey)
 	txID, _ := zil.RPC.CreateTransaction(rawTx, signature)
 	fmt.Printf("txID: %s\n", txID)
 }
