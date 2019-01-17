@@ -27,7 +27,7 @@ func TestZillean_GeneratePrivateKey(t *testing.T) {
 
 func TestZillean_VerifyPrivateKey(t *testing.T) {
 	Convey("returns true when the valid private key is given ", t, func() {
-		for _, vector := range testVectors {
+		for _, vector := range addressVectors {
 			result, err := NewZillean(localNet).VerifyPrivateKey(vector.privateKey)
 			So(err, ShouldBeNil)
 			So(result, ShouldBeTrue)
@@ -47,7 +47,7 @@ func TestZillean_VerifyPrivateKey(t *testing.T) {
 
 func TestZillean_GetPublicKeyFromPrivateKey(t *testing.T) {
 	Convey("returns the public key from the private key", t, func() {
-		for _, vector := range testVectors[:1] {
+		for _, vector := range addressVectors[:1] {
 			result, err := NewZillean(localNet).GetPublicKeyFromPrivateKey(vector.privateKey)
 			So(err, ShouldBeNil)
 			So(result, ShouldEqual, vector.publicKey)
@@ -57,7 +57,7 @@ func TestZillean_GetPublicKeyFromPrivateKey(t *testing.T) {
 
 func TestZillean_IsPublicKey(t *testing.T) {
 	Convey("returns true when the valid public key is given ", t, func() {
-		for _, vector := range testVectors {
+		for _, vector := range addressVectors {
 			result := NewZillean(localNet).IsPublicKey(vector.publicKey)
 			So(result, ShouldBeTrue)
 		}
@@ -71,7 +71,7 @@ func TestZillean_IsPublicKey(t *testing.T) {
 
 func TestZillean_GetAddressFromPrivateKey(t *testing.T) {
 	Convey("returns the address from the private key", t, func() {
-		for _, vector := range testVectors {
+		for _, vector := range addressVectors {
 			result, err := NewZillean(localNet).GetAddressFromPrivateKey(vector.privateKey)
 			So(err, ShouldBeNil)
 			So(result, ShouldEqual, vector.address)
@@ -81,7 +81,7 @@ func TestZillean_GetAddressFromPrivateKey(t *testing.T) {
 
 func TestZillean_GetAddressFromPublicKey(t *testing.T) {
 	Convey("returns the address from the public key", t, func() {
-		for _, vector := range testVectors {
+		for _, vector := range addressVectors {
 			result, err := NewZillean(localNet).GetAddressFromPublicKey(vector.publicKey)
 			So(err, ShouldBeNil)
 			So(result, ShouldEqual, vector.address)
@@ -91,7 +91,7 @@ func TestZillean_GetAddressFromPublicKey(t *testing.T) {
 
 func TestZillean_IsAddress(t *testing.T) {
 	Convey("returns true when the valid address is given ", t, func() {
-		for _, vector := range testVectors {
+		for _, vector := range addressVectors {
 			result := NewZillean(localNet).IsAddress(vector.address)
 			So(result, ShouldBeTrue)
 		}
@@ -100,6 +100,31 @@ func TestZillean_IsAddress(t *testing.T) {
 	Convey("returns false when the invalid address is given ", t, func() {
 		result := NewZillean(localNet).IsAddress("invalid address")
 		So(result, ShouldBeFalse)
+	})
+}
+
+func TestZillean_ToChecksumAddress(t *testing.T) {
+	Convey("returns the checksum address", t, func() {
+		for _, vector := range checksumVectors {
+			result, err := NewZillean(localNet).ToChecksumAddress(vector.original)
+			So(err, ShouldBeNil)
+			So(result, ShouldEqual, vector.zil)
+		}
+	})
+}
+func TestZillean_IsValidChecksumAddress(t *testing.T) {
+	Convey("returns true when the valid checksum address is given", t, func() {
+		for _, vector := range checksumVectors {
+			result := NewZillean(localNet).IsValidChecksumAddress(vector.zil)
+			So(result, ShouldBeTrue)
+		}
+	})
+
+	Convey("returns false when the invalid checksum address is given", t, func() {
+		for _, vector := range checksumVectors {
+			result := NewZillean(localNet).IsValidChecksumAddress(vector.eth)
+			So(result, ShouldBeFalse)
+		}
 	})
 }
 
