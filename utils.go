@@ -70,3 +70,10 @@ func generateRandomBytes(size int32) []byte {
 	_, _ = rand.Read(randomBytes)
 	return randomBytes
 }
+
+func strToBigInt(num string) *big.Int {
+	_num := &big.Int{}
+	_num.SetString(num, 10)
+
+	return _num
+}
