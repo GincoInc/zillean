@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"math/big"
 	"regexp"
-	"strings"
 
 	crypto "github.com/GincoInc/go-crypto"
 )
@@ -100,43 +99,6 @@ func (z *Zillean) GetAddressFromPublicKey(publicKey string) (string, error) {
 // IsAddress checks whether a given string is an address or not.
 func (z *Zillean) IsAddress(address string) bool {
 	return regexp.MustCompile(`^[0-9a-fA-F]{40}$`).MatchString(address)
-}
-
-// ToChecksumAddress returns the checksum address.
-func (z *Zillean) ToChecksumAddress(address string) (string, error) {
-	_address := strings.Replace(strings.ToLower(address), "0x", "", -1)
-	addressBytes, err := hex.DecodeString(_address)
-	if err != nil {
-		return "", err
-	}
-
-	hash := fmt.Sprintf("%x", crypto.Sha256(addressBytes))
-	v := &big.Int{}
-	v.SetString(hash, 16)
-
-	checksumAddress := "0x"
-	for i, c := range _address {
-		if strings.Contains("0123456789", string(c)) {
-			checksumAddress += string(c)
-		} else {
-			p := &big.Int{}
-			if p.And(v, p.Exp(big.NewInt(2), big.NewInt(255-6*int64(i)), nil)).Cmp(big.NewInt(1)) >= 0 {
-				checksumAddress += strings.ToUpper(string(c))
-			} else {
-				checksumAddress += strings.ToLower(string(c))
-			}
-		}
-	}
-
-	return checksumAddress, nil
-}
-
-// IsValidChecksumAddress checks whether an address is a valid checksum address.
-func (z *Zillean) IsValidChecksumAddress(address string) bool {
-	isAddress := z.IsAddress(strings.Replace(strings.ToLower(address), "0x", "", -1))
-	checksumAddress, _ := z.ToChecksumAddress(address)
-
-	return isAddress && checksumAddress == address
 }
 
 // SignTransaction returns the EC-Schnorr signature on a raw transaction.
