@@ -86,6 +86,9 @@ func TestRPC_GetLatestDsBlock(t *testing.T) {
 
 func TestRPC_GetNumDSBlocks(t *testing.T) {
 	Convey("returns the number of Directory Service blocks in the network so far. This is represented as a String", t, func() {
+		result, err := NewRPC(testNet).GetNumDSBlocks()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
 	})
 }
 

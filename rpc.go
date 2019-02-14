@@ -99,7 +99,19 @@ func (r *RPC) GetLatestDsBlock() (*DsBlock, error) {
 }
 
 // GetNumDSBlocks returns the number of Directory Service blocks in the network so far. This is represented as a String.
-func (r *RPC) GetNumDSBlocks() {
+func (r *RPC) GetNumDSBlocks() (string, error) {
+	resp, err := r.client.Call("GetNumDSBlocks", []interface{}{})
+	if err != nil {
+		return "", err
+	}
+
+	if resp.Error != nil {
+		return "", errors.New(resp.Error.Message)
+	}
+
+	var result string
+	resp.GetObject(&result)
+	return result, nil
 
 }
 
