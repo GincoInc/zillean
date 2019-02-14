@@ -315,8 +315,19 @@ func (r *RPC) GetPrevDifficulty() (int64, error) {
 }
 
 // GetPrevDSDifficulty returns the minimum DS difficulty of the previous block, this is represented as an Number.
-func (r *RPC) GetPrevDSDifficulty() {
+func (r *RPC) GetPrevDSDifficulty() (int64, error) {
+	resp, err := r.client.Call("GetPrevDifficulty", []interface{}{})
+	if err != nil {
+		return 0, err
+	}
 
+	if resp.Error != nil {
+		return 0, errors.New(resp.Error.Message)
+	}
+
+	var result int64
+	resp.GetObject(&result)
+	return result, nil
 }
 
 // CreateTransaction create a new Transaction.

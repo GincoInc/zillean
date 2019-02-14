@@ -222,6 +222,9 @@ func TestRPC_GetPrevDifficulty(t *testing.T) {
 
 func TestRPC_GetPrevDSDifficulty(t *testing.T) {
 	Convey("returns the minimum DS difficulty of the previous block, this is represented as an Number", t, func() {
+		result, err := NewRPC(testNet).GetPrevDSDifficulty()
+		So(err, ShouldBeNil)
+		So(result, ShouldBeGreaterThan, 0)
 	})
 }
 
