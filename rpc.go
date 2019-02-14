@@ -251,8 +251,19 @@ func (r *RPC) GetNumTransactions() (string, error) {
 }
 
 // GetTransactionRate returns the current Transaction rate of the network.
-func (r *RPC) GetTransactionRate() {
+func (r *RPC) GetTransactionRate() (float64, error) {
+	resp, err := r.client.Call("GetNumTransactions", []interface{}{})
+	if err != nil {
+		return 0, err
+	}
 
+	if resp.Error != nil {
+		return 0, errors.New(resp.Error.Message)
+	}
+
+	var result float64
+	resp.GetObject(&result)
+	return result, nil
 }
 
 // GetCurrentMiniEpoch returns the number of TX epochs in the network so far represented as String.

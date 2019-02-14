@@ -190,6 +190,9 @@ func TestRPC_GetNumTransactions(t *testing.T) {
 
 func TestRPC_GetTransactionRate(t *testing.T) {
 	Convey("returns the current Transaction rate of the network", t, func() {
+		result, err := NewRPC(testNet).GetTransactionRate()
+		So(err, ShouldBeNil)
+		So(result, ShouldBeGreaterThanOrEqualTo, 0)
 	})
 }
 
