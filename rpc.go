@@ -428,8 +428,19 @@ func (r *RPC) GetNumTxnsTxEpoch() (string, error) {
 }
 
 // GetNumTxnsDSEpoch returns the number of transactions in this Directory Service epoch, this is represented as String.
-func (r *RPC) GetNumTxnsDSEpoch() {
+func (r *RPC) GetNumTxnsDSEpoch() (string, error) {
+	resp, err := r.client.Call("GetNumTxnsDSEpoch", []interface{}{})
+	if err != nil {
+		return "", err
+	}
 
+	if resp.Error != nil {
+		return "", errors.New(resp.Error.Message)
+	}
+
+	var result string
+	resp.GetObject(&result)
+	return result, nil
 }
 
 // GetMinimumGasPrice returns the minimum gas price of the last DS epoch represented as String. This is measured in the smallest price unit Qa (10^-12 Zil) in Zilliqa.

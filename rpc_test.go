@@ -295,6 +295,9 @@ func TestRPC_GetNumTxnsTxEpoch(t *testing.T) {
 
 func TestRPC_GetNumTxnsDSEpoch(t *testing.T) {
 	Convey("returns the number of transactions in this Directory Service epoch, this is represented as String", t, func() {
+		result, err := NewRPC(testNet).GetNumTxnsDSEpoch()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
 	})
 }
 
