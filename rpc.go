@@ -396,8 +396,19 @@ func (r *RPC) GetRecentTransactions() (*RecentTransactions, error) {
 }
 
 // GetTransactionsForTxBlock returns the transactions included within a micro-block created by a specific shard.
-func (r *RPC) GetTransactionsForTxBlock() {
+func (r *RPC) GetTransactionsForTxBlock(blockNumber string) ([][]string, error) {
+	resp, err := r.client.Call("GetTransactionsForTxBlock", []interface{}{blockNumber})
+	if err != nil {
+		return nil, err
+	}
 
+	if resp.Error != nil {
+		return nil, errors.New(resp.Error.Message)
+	}
+
+	var result [][]string
+	resp.GetObject(&result)
+	return result, nil
 }
 
 // GetNumTxnsTxEpoch returns the number of transactions in this Transaction epoch, this is represented as String.

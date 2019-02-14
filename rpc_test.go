@@ -278,6 +278,10 @@ func TestRPC_GetRecentTransactions(t *testing.T) {
 
 func TestRPC_GetTransactionsForTxBlock(t *testing.T) {
 	Convey("returns the transactions included within a micro-block created by a specific shard", t, func() {
+		result, err := NewRPC(testNet).GetTransactionsForTxBlock("68317")
+		So(err, ShouldBeNil)
+		So(len(result), ShouldBeGreaterThan, 0)
+		So(result[1][0], ShouldEqual, "920f29f2985aac61637e82f7170f6ca465cc7e5495fecd53c808d63a98cbc8c5")
 	})
 }
 
