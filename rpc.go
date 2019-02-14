@@ -342,6 +342,8 @@ func (r *RPC) CreateTransaction(rawTx RawTransaction, signature string) (string,
 		PubKey:    rawTx.PubKey,
 		GasPrice:  rawTx.GasPrice,
 		GasLimit:  rawTx.GasLimit,
+		Code:      rawTx.Code,
+		Data:      rawTx.Data,
 		Signature: signature,
 	}})
 

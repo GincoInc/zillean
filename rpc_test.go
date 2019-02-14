@@ -234,9 +234,9 @@ func TestRPC_CreateTransaction(t *testing.T) {
 		privateKey := "B7139607427E6A03436469806FC1167ECEA26130736BDE063A4EED01036DBF03"
 		publicKey, _ := zillean.GetPublicKeyFromPrivateKey(privateKey)
 		rawTx := RawTransaction{
-			Version:  0,
+			Version:  21823489,
 			Nonce:    1,
-			To:       "546c73019def014ff2e363c4bc97de9ef90354fa",
+			To:       "Df4B175C78e16EeBC05173E5C1f87355622D8104",
 			Amount:   "1000000000000",
 			PubKey:   publicKey,
 			GasPrice: big.NewInt(1000000000),
@@ -245,7 +245,7 @@ func TestRPC_CreateTransaction(t *testing.T) {
 		signature, _ := zillean.SignTransaction(rawTx, privateKey)
 		result, err := zillean.RPC.CreateTransaction(rawTx, signature)
 		So(err, ShouldBeNil)
-		So(result, ShouldEqual, "b25e05c30c53b2e2beeb67b5aad483069c18d1901b544fd63301dec6516873de")
+		So(result, ShouldEqual, "920f29f2985aac61637e82f7170f6ca465cc7e5495fecd53c808d63a98cbc8c5")
 	})
 }
 
