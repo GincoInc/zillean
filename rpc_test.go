@@ -206,6 +206,9 @@ func TestRPC_GetCurrentMiniEpoch(t *testing.T) {
 
 func TestRPC_GetCurrentDSEpoch(t *testing.T) {
 	Convey("returns the number of DS epochs in the network so far represented as String", t, func() {
+		result, err := NewRPC(testNet).GetCurrentDSEpoch()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
 	})
 }
 

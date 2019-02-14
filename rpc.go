@@ -283,8 +283,19 @@ func (r *RPC) GetCurrentMiniEpoch() (string, error) {
 }
 
 // GetCurrentDSEpoch returns the number of DS epochs in the network so far represented as String.
-func (r *RPC) GetCurrentDSEpoch() {
+func (r *RPC) GetCurrentDSEpoch() (string, error) {
+	resp, err := r.client.Call("GetNumTransactions", []interface{}{})
+	if err != nil {
+		return "", err
+	}
 
+	if resp.Error != nil {
+		return "", errors.New(resp.Error.Message)
+	}
+
+	var result string
+	resp.GetObject(&result)
+	return result, nil
 }
 
 // GetPrevDifficulty returns the minimum shard difficulty of the previous block, this is represented as an Number.
