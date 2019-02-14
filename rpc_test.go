@@ -157,6 +157,9 @@ func TestRPC_GetLatestTxBlock(t *testing.T) {
 
 func TestRPC_GetNumTxBlocks(t *testing.T) {
 	Convey("returns the number of Transaction blocks in the network so far, this is represented as String", t, func() {
+		result, err := NewRPC(testNet).GetNumTxBlocks()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
 	})
 }
 

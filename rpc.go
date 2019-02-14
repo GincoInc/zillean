@@ -184,8 +184,19 @@ func (r *RPC) GetLatestTxBlock() (*TxBlock, error) {
 }
 
 // GetNumTxBlocks returns the number of Transaction blocks in the network so far, this is represented as String.
-func (r *RPC) GetNumTxBlocks() {
+func (r *RPC) GetNumTxBlocks() (string, error) {
+	resp, err := r.client.Call("GetNumTxBlocks", []interface{}{})
+	if err != nil {
+		return "", err
+	}
 
+	if resp.Error != nil {
+		return "", errors.New(resp.Error.Message)
+	}
+
+	var result string
+	resp.GetObject(&result)
+	return result, nil
 }
 
 // GetTxBlockRate returns the current Transaction blockrate per second.
