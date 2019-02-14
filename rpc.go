@@ -252,7 +252,7 @@ func (r *RPC) GetNumTransactions() (string, error) {
 
 // GetTransactionRate returns the current Transaction rate of the network.
 func (r *RPC) GetTransactionRate() (float64, error) {
-	resp, err := r.client.Call("GetNumTransactions", []interface{}{})
+	resp, err := r.client.Call("GetTransactionRate", []interface{}{})
 	if err != nil {
 		return 0, err
 	}
@@ -268,7 +268,7 @@ func (r *RPC) GetTransactionRate() (float64, error) {
 
 // GetCurrentMiniEpoch returns the number of TX epochs in the network so far represented as String.
 func (r *RPC) GetCurrentMiniEpoch() (string, error) {
-	resp, err := r.client.Call("GetNumTransactions", []interface{}{})
+	resp, err := r.client.Call("GetCurrentMiniEpoch", []interface{}{})
 	if err != nil {
 		return "", err
 	}
@@ -284,7 +284,7 @@ func (r *RPC) GetCurrentMiniEpoch() (string, error) {
 
 // GetCurrentDSEpoch returns the number of DS epochs in the network so far represented as String.
 func (r *RPC) GetCurrentDSEpoch() (string, error) {
-	resp, err := r.client.Call("GetNumTransactions", []interface{}{})
+	resp, err := r.client.Call("GetCurrentDSEpoch", []interface{}{})
 	if err != nil {
 		return "", err
 	}
@@ -299,8 +299,19 @@ func (r *RPC) GetCurrentDSEpoch() (string, error) {
 }
 
 // GetPrevDifficulty returns the minimum shard difficulty of the previous block, this is represented as an Number.
-func (r *RPC) GetPrevDifficulty() {
+func (r *RPC) GetPrevDifficulty() (int64, error) {
+	resp, err := r.client.Call("GetPrevDifficulty", []interface{}{})
+	if err != nil {
+		return 0, err
+	}
 
+	if resp.Error != nil {
+		return 0, errors.New(resp.Error.Message)
+	}
+
+	var result int64
+	resp.GetObject(&result)
+	return result, nil
 }
 
 // GetPrevDSDifficulty returns the minimum DS difficulty of the previous block, this is represented as an Number.

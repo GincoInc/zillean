@@ -214,6 +214,9 @@ func TestRPC_GetCurrentDSEpoch(t *testing.T) {
 
 func TestRPC_GetPrevDifficulty(t *testing.T) {
 	Convey("returns the minimum shard difficulty of the previous block, this is represented as an Number", t, func() {
+		result, err := NewRPC(testNet).GetPrevDifficulty()
+		So(err, ShouldBeNil)
+		So(result, ShouldBeGreaterThan, 0)
 	})
 }
 
