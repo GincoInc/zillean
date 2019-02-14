@@ -48,7 +48,6 @@ type TxBlock struct {
 		StateRootHash  string `json:"StateRootHash"`
 		Timestamp      string `json:"Timestamp"`
 		TxnHash        string `json:"TxnHash"`
-		Type           int64  `json:"type"`
 		Version        int64  `json:"version"`
 	} `json:"header"`
 }
