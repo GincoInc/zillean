@@ -87,20 +87,23 @@ type RawTransaction struct {
 
 // BlockchainInfo describes the information about Zilliqa blockchain.
 type BlockchainInfo struct {
-	CurrentDSEpoch    string  `json:"CurrentDSEpoch"`
-	CurrentMiniEpoch  string  `json:"CurrentMiniEpoch"`
-	DSBlockRate       float64 `json:"DSBlockRate"`
-	NumDSBlocks       string  `json:"NumDSBlocks"`
-	NumPeers          int64   `json:"NumPeers"`
-	NumTransactions   string  `json:"NumTransactions"`
-	NumTxBlocks       string  `json:"NumTxBlocks"`
-	NumTxnsDSEpoch    string  `json:"NumTxnsDSEpoch"`
-	NumTxnsTxEpoch    int64   `json:"NumTxnsTxEpoch"`
-	ShardingStructure struct {
-		NumPeers []int64 `json:"NumPeers"`
-	}
-	TransactionRate int64   `json:"TransactionRate"`
-	TxBlockRate     float64 `json:"TxBlockRate"`
+	CurrentDSEpoch    string            `json:"CurrentDSEpoch"`
+	CurrentMiniEpoch  string            `json:"CurrentMiniEpoch"`
+	DSBlockRate       float64           `json:"DSBlockRate"`
+	NumDSBlocks       string            `json:"NumDSBlocks"`
+	NumPeers          int64             `json:"NumPeers"`
+	NumTransactions   string            `json:"NumTransactions"`
+	NumTxBlocks       string            `json:"NumTxBlocks"`
+	NumTxnsDSEpoch    string            `json:"NumTxnsDSEpoch"`
+	NumTxnsTxEpoch    int64             `json:"NumTxnsTxEpoch"`
+	ShardingStructure ShardingStructure `json:"ShardingStructure"`
+	TransactionRate   int64             `json:"TransactionRate"`
+	TxBlockRate       float64           `json:"TxBlockRate"`
+}
+
+// ShardingStructure contains the number of peers in each shard.
+type ShardingStructure struct {
+	NumPeers []int64 `json:"NumPeers"`
 }
 
 // RecentTransactions contains the most recent transactions (up to 100).

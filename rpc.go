@@ -51,8 +51,19 @@ func (r *RPC) GetBlockchainInfo() (*BlockchainInfo, error) {
 }
 
 // GetShardingStructure returns the current sharding structure of the network from the specified network's lookup node.
-func (r *RPC) GetShardingStructure() {
+func (r *RPC) GetShardingStructure() (*ShardingStructure, error) {
+	resp, err := r.client.Call("GetShardingStructure", []interface{}{})
+	if err != nil {
+		return nil, err
+	}
 
+	if resp.Error != nil {
+		return nil, errors.New(resp.Error.Message)
+	}
+
+	var result ShardingStructure
+	resp.GetObject(&result)
+	return &result, nil
 }
 
 // GetDsBlock returns details of a Directory Service block by block number.
