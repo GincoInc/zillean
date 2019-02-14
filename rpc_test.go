@@ -94,6 +94,9 @@ func TestRPC_GetNumDSBlocks(t *testing.T) {
 
 func TestRPC_GetDSBlockRate(t *testing.T) {
 	Convey("returns the current Directory Service blockrate per second", t, func() {
+		result, err := NewRPC(testNet).GetDSBlockRate()
+		So(err, ShouldBeNil)
+		So(result, ShouldBeGreaterThan, 0)
 	})
 }
 

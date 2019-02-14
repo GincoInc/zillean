@@ -116,7 +116,19 @@ func (r *RPC) GetNumDSBlocks() (string, error) {
 }
 
 // GetDSBlockRate returns the current Directory Service blockrate per second.
-func (r *RPC) GetDSBlockRate() {
+func (r *RPC) GetDSBlockRate() (float64, error) {
+	resp, err := r.client.Call("GetDSBlockRate", []interface{}{})
+	if err != nil {
+		return 0, err
+	}
+
+	if resp.Error != nil {
+		return 0, errors.New(resp.Error.Message)
+	}
+
+	var result float64
+	resp.GetObject(&result)
+	return result, nil
 
 }
 
