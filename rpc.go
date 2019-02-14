@@ -267,8 +267,19 @@ func (r *RPC) GetTransactionRate() (float64, error) {
 }
 
 // GetCurrentMiniEpoch returns the number of TX epochs in the network so far represented as String.
-func (r *RPC) GetCurrentMiniEpoch() {
+func (r *RPC) GetCurrentMiniEpoch() (string, error) {
+	resp, err := r.client.Call("GetNumTransactions", []interface{}{})
+	if err != nil {
+		return "", err
+	}
 
+	if resp.Error != nil {
+		return "", errors.New(resp.Error.Message)
+	}
+
+	var result string
+	resp.GetObject(&result)
+	return result, nil
 }
 
 // GetCurrentDSEpoch returns the number of DS epochs in the network so far represented as String.

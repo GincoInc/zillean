@@ -198,6 +198,9 @@ func TestRPC_GetTransactionRate(t *testing.T) {
 
 func TestRPC_GetCurrentMiniEpoch(t *testing.T) {
 	Convey("returns the number of TX epochs in the network so far represented as String", t, func() {
+		result, err := NewRPC(testNet).GetCurrentMiniEpoch()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
 	})
 }
 
