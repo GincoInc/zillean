@@ -75,6 +75,8 @@ func TestRPC_GetLatestDsBlock(t *testing.T) {
 		So(err, ShouldBeNil)
 		So(result.Header.BlockNum, ShouldNotBeBlank)
 		So(result.Header.Difficulty, ShouldBeGreaterThan, 0)
+		So(result.Header.DifficultyDS, ShouldBeGreaterThan, 0)
+		So(result.Header.GasPrice, ShouldNotBeBlank)
 		So(result.Header.LeaderPubKey, ShouldNotBeBlank)
 		So(result.Header.Prevhash, ShouldNotBeBlank)
 		So(result.Header.Timestamp, ShouldNotBeBlank)
