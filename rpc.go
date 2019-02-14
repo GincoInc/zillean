@@ -200,8 +200,19 @@ func (r *RPC) GetNumTxBlocks() (string, error) {
 }
 
 // GetTxBlockRate returns the current Transaction blockrate per second.
-func (r *RPC) GetTxBlockRate() {
+func (r *RPC) GetTxBlockRate() (float64, error) {
+	resp, err := r.client.Call("GetTxBlockRate", []interface{}{})
+	if err != nil {
+		return 0, err
+	}
 
+	if resp.Error != nil {
+		return 0, errors.New(resp.Error.Message)
+	}
+
+	var result float64
+	resp.GetObject(&result)
+	return result, nil
 }
 
 // TxBlockListing returns a paginated list of Transaction blocks.

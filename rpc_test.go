@@ -165,6 +165,9 @@ func TestRPC_GetNumTxBlocks(t *testing.T) {
 
 func TestRPC_GetTxBlockRate(t *testing.T) {
 	Convey("returns the current Transaction blockrate per second", t, func() {
+		result, err := NewRPC(testNet).GetTxBlockRate()
+		So(err, ShouldBeNil)
+		So(result, ShouldBeGreaterThan, 0)
 	})
 }
 
