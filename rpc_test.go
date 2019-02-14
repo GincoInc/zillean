@@ -182,6 +182,9 @@ func TestRPC_GetTxBlockListing(t *testing.T) {
 
 func TestRPC_GetNumTransactions(t *testing.T) {
 	Convey("returns the number of Transactions validated in the network so far. This is represented as a String", t, func() {
+		result, err := NewRPC(testNet).GetNumTransactions()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
 	})
 }
 

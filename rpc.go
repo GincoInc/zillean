@@ -235,8 +235,19 @@ func (r *RPC) TxBlockListing(pageNumber int64) (*ListedBlocks, error) {
 }
 
 // GetNumTransactions returns the number of Transactions validated in the network so far. This is represented as a String.
-func (r *RPC) GetNumTransactions() {
+func (r *RPC) GetNumTransactions() (string, error) {
+	resp, err := r.client.Call("GetNumTransactions", []interface{}{})
+	if err != nil {
+		return "", err
+	}
 
+	if resp.Error != nil {
+		return "", errors.New(resp.Error.Message)
+	}
+
+	var result string
+	resp.GetObject(&result)
+	return result, nil
 }
 
 // GetTransactionRate returns the current Transaction rate of the network.
