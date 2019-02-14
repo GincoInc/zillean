@@ -287,6 +287,9 @@ func TestRPC_GetTransactionsForTxBlock(t *testing.T) {
 
 func TestRPC_GetNumTxnsTxEpoch(t *testing.T) {
 	Convey("returns the number of transactions in this Transaction epoch, this is represented as String", t, func() {
+		result, err := NewRPC(testNet).GetNumTxnsTxEpoch()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
 	})
 }
 

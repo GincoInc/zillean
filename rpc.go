@@ -412,8 +412,19 @@ func (r *RPC) GetTransactionsForTxBlock(blockNumber string) ([][]string, error) 
 }
 
 // GetNumTxnsTxEpoch returns the number of transactions in this Transaction epoch, this is represented as String.
-func (r *RPC) GetNumTxnsTxEpoch() {
+func (r *RPC) GetNumTxnsTxEpoch() (string, error) {
+	resp, err := r.client.Call("GetNumTxnsTxEpoch", []interface{}{})
+	if err != nil {
+		return "", err
+	}
 
+	if resp.Error != nil {
+		return "", errors.New(resp.Error.Message)
+	}
+
+	var result string
+	resp.GetObject(&result)
+	return result, nil
 }
 
 // GetNumTxnsDSEpoch returns the number of transactions in this Directory Service epoch, this is represented as String.
