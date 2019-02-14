@@ -444,8 +444,19 @@ func (r *RPC) GetNumTxnsDSEpoch() (string, error) {
 }
 
 // GetMinimumGasPrice returns the minimum gas price of the last DS epoch represented as String. This is measured in the smallest price unit Qa (10^-12 Zil) in Zilliqa.
-func (r *RPC) GetMinimumGasPrice() {
+func (r *RPC) GetMinimumGasPrice() (string, error) {
+	resp, err := r.client.Call("GetMinimumGasPrice", []interface{}{})
+	if err != nil {
+		return "", err
+	}
 
+	if resp.Error != nil {
+		return "", errors.New(resp.Error.Message)
+	}
+
+	var result string
+	resp.GetObject(&result)
+	return result, nil
 }
 
 // GetSmartContractCode returns the Scilla code of a smart contract address.

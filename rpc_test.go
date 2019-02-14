@@ -303,6 +303,9 @@ func TestRPC_GetNumTxnsDSEpoch(t *testing.T) {
 
 func TestRPC_GetMinimumGasPrice(t *testing.T) {
 	Convey("returns the minimum gas price of the last DS epoch represented as String", t, func() {
+		result, err := NewRPC(testNet).GetMinimumGasPrice()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
 	})
 }
 
