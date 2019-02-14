@@ -17,7 +17,7 @@ func TestRPC_GetNetworkID(t *testing.T) {
 	Convey("returns the network ID of the specified zilliqa node", t, func() {
 		result, err := NewRPC(testNet).GetNetworkID()
 		So(err, ShouldBeNil)
-		So(result, ShouldEqual, "TestNet")
+		So(result, ShouldEqual, "333")
 	})
 }
 
