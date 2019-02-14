@@ -251,20 +251,20 @@ func TestRPC_CreateTransaction(t *testing.T) {
 
 func TestRPC_GetTransaction(t *testing.T) {
 	Convey("returns details of a Transaction by its hash", t, func() {
-		result, err := NewRPC(testNet).GetTransaction("B25E05C30C53B2E2BEEB67B5AAD483069C18D1901B544FD63301DEC6516873DE")
+		result, err := NewRPC(testNet).GetTransaction("920f29f2985aac61637e82f7170f6ca465cc7e5495fecd53c808d63a98cbc8c5")
 		So(err, ShouldBeNil)
-		So(result.ID, ShouldEqual, "b25e05c30c53b2e2beeb67b5aad483069c18d1901b544fd63301dec6516873de")
+		So(result.ID, ShouldEqual, "920f29f2985aac61637e82f7170f6ca465cc7e5495fecd53c808d63a98cbc8c5")
 		So(result.Amount, ShouldEqual, "1000000000000")
 		So(result.GasLimit, ShouldEqual, "1")
 		So(result.GasPrice, ShouldEqual, "1000000000")
 		So(result.Nonce, ShouldEqual, "1")
 		So(result.Receipt.CumulativeGas, ShouldEqual, "1")
-		So(result.Receipt.EpochNum, ShouldEqual, "5128")
+		So(result.Receipt.EpochNum, ShouldEqual, "68317")
 		So(result.Receipt.Success, ShouldBeTrue)
 		So(result.SenderPubKey, ShouldEqual, "0x02892A6380826988CC46F317310D09F3BAB838B9D8C2407775F20F6AB8BD2A9FFF")
-		So(result.Signature, ShouldEqual, "0x44509B5C1408B48268062580E74372106983B75C0E8E070086030E0F2D12D32DE94FC644D76F46D3BD4DA5F55FAF04397879CE32FF40A81B3B1FA43EC25B5C04")
-		So(result.ToAddr, ShouldEqual, "546c73019def014ff2e363c4bc97de9ef90354fa")
-		So(result.Version, ShouldEqual, "0")
+		So(result.Signature, ShouldEqual, "0x11D6123D59EDD00E9A22E4909B1AC08ECED2B64366DF883C6231B491A4FFDE4E31DF1A424F8987657B3B66AA0E0220B8C61BD1FFA79912F700D220297EDE051C")
+		So(result.ToAddr, ShouldEqual, "df4b175c78e16eebc05173e5c1f87355622d8104")
+		So(result.Version, ShouldEqual, "21823489")
 	})
 }
 
