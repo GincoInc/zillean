@@ -376,9 +376,9 @@ func TestRPC_GetContractAddressFromTransactionID(t *testing.T) {
 
 func TestRPC_GetBalance(t *testing.T) {
 	Convey("returns the balance and nonce of a given address", t, func() {
-		result, err := NewRPC(testNet).GetBalance("546c73019def014ff2e363c4bc97de9ef90354fa")
+		result, err := NewRPC(testNet).GetBalance("Df4B175C78e16EeBC05173E5C1f87355622D8104")
 		So(err, ShouldBeNil)
-		So(result.Balance, ShouldEqual, "1000000000000")
+		So(result.Balance, ShouldEqual, "3000000000000")
 		So(result.Nonce, ShouldEqual, 0)
 	})
 }
