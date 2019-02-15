@@ -356,10 +356,13 @@ func TestRPC_GetSmartContracts(t *testing.T) {
 		result, err := NewRPC(testNet).GetSmartContracts("f49f1306bc8fb0cd8167a58a3550c1443072e96b")
 		So(err, ShouldBeNil)
 		So(len(result), ShouldEqual, 1)
-		So(result[0].Address, ShouldEqual, "2112d6eda5d539826e2a2f175d96a181791a34ab")
-		So(result[0].State[0].Type, ShouldEqual, "Uint128")
-		So(result[0].State[0].Value, ShouldEqual, "0")
-		So(result[0].State[0].Vname, ShouldEqual, "_balance")
+		So(result[0].Address, ShouldEqual, "6c1169e8a77d34d6d615862db5f62f0a9791cb9f")
+		So(result[0].State[0].Type, ShouldEqual, "String")
+		So(result[0].State[0].Value, ShouldEqual, "Hello World")
+		So(result[0].State[0].Vname, ShouldEqual, "welcome_msg")
+		So(result[0].State[1].Type, ShouldEqual, "Uint128")
+		So(result[0].State[1].Value, ShouldEqual, "0")
+		So(result[0].State[1].Vname, ShouldEqual, "_balance")
 	})
 }
 
