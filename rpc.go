@@ -526,8 +526,19 @@ func (r *RPC) GetSmartContracts(address string) ([]SmartContract, error) {
 }
 
 // GetContractAddressFromTransactionID returns a smart contract address of 20 bytes from a transaction ID, represented as a String .
-func (r *RPC) GetContractAddressFromTransactionID() {
+func (r *RPC) GetContractAddressFromTransactionID(txHash string) (string, error) {
+	resp, err := r.client.Call("GetContractAddressFromTransactionID", []interface{}{txHash})
+	if err != nil {
+		return "", err
+	}
 
+	if resp.Error != nil {
+		return "", errors.New(resp.Error.Message)
+	}
+
+	var result string
+	resp.GetObject(&result)
+	return result, nil
 }
 
 // GetBalance returns the balance and nonce of a given address.

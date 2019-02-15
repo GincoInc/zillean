@@ -368,6 +368,9 @@ func TestRPC_GetSmartContracts(t *testing.T) {
 
 func TestRPC_GetContractAddressFromTransactionID(t *testing.T) {
 	Convey("returns a smart contract address of 20 bytes from a transaction ID, represented as a String", t, func() {
+		result, err := NewRPC(testNet).GetContractAddressFromTransactionID("1088aa52939a6d6d79deb80557f75d00b9e8615864df906625dc9e6948b9be95")
+		So(err, ShouldBeNil)
+		So(result, ShouldEqual, "6c1169e8a77d34d6d615862db5f62f0a9791cb9f")
 	})
 }
 
