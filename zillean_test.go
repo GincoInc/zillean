@@ -12,7 +12,7 @@ import (
 
 const (
 	localNet = "http://127.0.0.1:4200"
-	testNet  = "https://api.zilliqa.com"
+	testNet  = "https://dev-api.zilliqa.com/"
 	// testNet = "https://testnet-n-api.aws.zilliqa.com"
 	// testNet = "https://api-scilla.zilliqa.com"
 )

@@ -33,8 +33,12 @@ func encodeTransaction(rawTx RawTransaction) []byte {
 		Amount:       &amount,
 		Gasprice:     &gasPrice,
 		Gaslimit:     &rawTx.GasLimit,
-		Code:         []byte(rawTx.Code),
-		Data:         []byte(rawTx.Data),
+	}
+	if rawTx.Code != "" {
+		protoTxCoreInfo.Code = []byte(rawTx.Code)
+	}
+	if rawTx.Data != "" {
+		protoTxCoreInfo.Data = []byte(rawTx.Data)
 	}
 	encodedTx, _ := proto.Marshal(&protoTxCoreInfo)
 

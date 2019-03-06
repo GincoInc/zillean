@@ -78,12 +78,9 @@ func (ecs *ECSchnorr) trySign(privKey, pubKey, k, msg []byte) ([]byte, []byte, e
 	Qx, Qy := ecs.Curve.ScalarBaseMult(k)
 	Q := crypto.Compress(ecs.Curve, Qx, Qy)
 
-	r := new(big.Int).SetBytes(hash(Q, pubKey, msg))
-	if r.Cmp(big.NewInt(0)) == 0 || r.Cmp(ecs.Curve.Params().N) >= 0 {
-		return nil, nil, errors.New("Invalid r")
-	}
-
 	// 3. Compute the challenge r = H(Q, pubKey, msg)
+	r := new(big.Int).SetBytes(hash(Q, pubKey, msg))
+	r = r.Mod(r, ecs.Curve.Params().N)
 	sk := new(big.Int).SetBytes(privKey)
 	_r := *r
 
