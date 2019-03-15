@@ -1,6 +1,7 @@
 package zillean
 
 import (
+	"fmt"
 	"math/big"
 	"testing"
 
@@ -13,177 +14,11 @@ func TestNewRPC(t *testing.T) {
 	})
 }
 
-func TestRPC_GetBalance(t *testing.T) {
-	Convey("returns the balance and nonce of a given address", t, func() {
-		result, err := NewRPC(testNet).GetBalance("5568CF7C38334A4E960BC99D8F22C1E90645E5F2")
+func TestRPC_GetNetworkID(t *testing.T) {
+	Convey("returns the network ID of the specified zilliqa node", t, func() {
+		result, err := NewRPC(testNet).GetNetworkID()
 		So(err, ShouldBeNil)
-		So(result.Balance, ShouldEqual, "1000000000000")
-		So(result.Nonce, ShouldEqual, 0)
-	})
-}
-
-func TestRPC_GetDsBlock(t *testing.T) {
-	Convey("returns details of a Directory Service block by block number", t, func() {
-		result, err := NewRPC(testNet).GetDsBlock("1")
-		So(err, ShouldBeNil)
-		So(result.Header.BlockNum, ShouldEqual, "1")
-		So(result.Header.Difficulty, ShouldEqual, 3)
-		So(result.Header.DifficultyDS, ShouldEqual, 5)
-		So(result.Header.GasPrice, ShouldEqual, "1000000000")
-		So(result.Header.LeaderPubKey, ShouldEqual, "0x02002F3550709EDA6A480F4E63FD7EAAB151149A7DA5726E37B317AC39D78549CF")
-		So(result.Header.PoWWinners, ShouldResemble, []string{"0x038F3F572D3C873EF1F06AFC9247D584163CDEE3AE6AF943CCB8F7293FAF2FE500", "0x039045C744B71E64A5098DCC2E3614989D461BA5C195AF71C15B56F38BFE1E6809", "0x039E5811FE01268DDDAF5281A72915B1C564F8BC6424202488B2E249EFB33D6ED9", "0x03B03E2854A5E302B25BCA1F1DFE03DEA537B4EBEDA5F65E72505EA51E9CB52287", "0x03B5F0F75B69A3C6E4CD31F68352A924F97AB983694D7461AE441EBA397F6A3DD5", "0x03D87B6FD7B3D8A80285B8DE5D8137E6A1C4EE3670F8E3A036EF150A57D86A8045", "0x03E36CA078F3E6E28F156BD623D6407E9E746E062B3685DC7D10BA34E1FA168A5F", "0x03E87174AE9993E8ABC1D823EE8D3AD3B78FB598FB778EB4B22DB92DAE1C15E8EE", "0x03F2374DE8FCF30EA993592B93E976E5171073F1240C8B3F3687711428028DC3F0", "0x03F6D3A5767221E970B40A38840C99649ADC398F83EE4848C4561291E3AE633C92"})
-		So(result.Header.Prevhash, ShouldEqual, "ba127538d2c63eec121629011ae8173210589689dca54d1e11904dd82c68e9da")
-		So(result.Header.Timestamp, ShouldEqual, "1545390003677310")
-		So(result.Signature, ShouldEqual, "09A271C06660111DD2CA581D018C987155E58E1B4811B0E2BA079CE9060B2401F2B10C6E5D2A3AA3DC4C61A11763FE29E0A6AC673A24D4D323457023D8F1E252")
-	})
-}
-
-func TestRPC_GetTxBlock(t *testing.T) {
-	Convey("returns details of a Transaction block by block number.", t, func() {
-		result, err := NewRPC(testNet).GetTxBlock("100")
-		So(err, ShouldBeNil)
-		So(result.Body.HeaderSign, ShouldEqual, "A45D6BF82D00C13360C87625EECC8D9D7CD4DF62D9C4CB037D2F0AFB725CDCA9F5965BC4AB1E55D220153C0D7336B8E9D794F6478A9F115F9DE046A0A14C3BCA")
-		So(len(result.Body.MicroBlockInfos), ShouldEqual, 4)
-		So(result.Header.BlockNum, ShouldEqual, "100")
-		So(result.Header.DsBlockNum, ShouldEqual, "2")
-		So(result.Header.GasLimit, ShouldEqual, "2000000")
-		So(result.Header.GasUsed, ShouldEqual, "0")
-		So(result.Header.MbInfoHash, ShouldEqual, "2e138097da1707573580ac2538e7681582adee762a8ee367efe04b657a653c3a")
-		So(result.Header.MinerPubKey, ShouldEqual, "0x02129C96C0ABDA482E959AE0C7EF0FB19D056233DCE96E6E8E7DE49165383BE2CC")
-		So(result.Header.NumMicroBlocks, ShouldEqual, 4)
-		So(result.Header.NumTxns, ShouldEqual, 0)
-		So(result.Header.PrevBlockHash, ShouldEqual, "69a621c3fdc64945d2eed7a38a0da9b1ebe5de1f64cc4f48fc1219665fdeef84")
-		So(result.Header.Rewards, ShouldEqual, "0")
-		So(result.Header.StateDeltaHash, ShouldEqual, "0000000000000000000000000000000000000000000000000000000000000000")
-		So(result.Header.StateRootHash, ShouldEqual, "1e0fea2b34b7a8ebe6d1d9a31d6c3c4910529a95d702481a13cd9e788fc26182")
-		So(result.Header.Timestamp, ShouldEqual, "1545393785852975")
-		So(result.Header.Type, ShouldEqual, 1)
-		So(result.Header.Version, ShouldEqual, 0)
-	})
-}
-
-func TestRPC_GetLatestDsBlock(t *testing.T) {
-	Convey("returns details of the most recent Directory Service block", t, func() {
-		result, err := NewRPC(testNet).GetLatestDsBlock()
-		So(err, ShouldBeNil)
-		So(result.Header.BlockNum, ShouldNotBeBlank)
-		So(result.Header.Difficulty, ShouldBeGreaterThan, 0)
-		So(result.Header.LeaderPubKey, ShouldNotBeBlank)
-		So(result.Header.Prevhash, ShouldNotBeBlank)
-		So(result.Header.Timestamp, ShouldNotBeBlank)
-		So(result.Signature, ShouldNotBeBlank)
-	})
-}
-
-func TestRPC_GetLatestTxBlock(t *testing.T) {
-	Convey("returns details of the most recent Transaction block", t, func() {
-		result, err := NewRPC(testNet).GetLatestTxBlock()
-		So(err, ShouldBeNil)
-		So(result.Body.HeaderSign, ShouldNotBeBlank)
-		So(result.Body.MicroBlockInfos, ShouldNotBeNil)
-		So(result.Header.BlockNum, ShouldNotBeBlank)
-		So(result.Header.DsBlockNum, ShouldNotBeBlank)
-		So(result.Header.GasLimit, ShouldNotBeBlank)
-		So(result.Header.GasUsed, ShouldNotBeBlank)
-		So(result.Header.MbInfoHash, ShouldNotBeBlank)
-		So(result.Header.MinerPubKey, ShouldNotBeBlank)
-		So(result.Header.NumMicroBlocks, ShouldBeGreaterThan, 0)
-		So(result.Header.NumTxns, ShouldHaveSameTypeAs, int64(0))
-		So(result.Header.PrevBlockHash, ShouldNotBeBlank)
-		So(result.Header.Rewards, ShouldNotBeBlank)
-		So(result.Header.StateDeltaHash, ShouldNotBeBlank)
-		So(result.Header.StateRootHash, ShouldNotBeBlank)
-		So(result.Header.Timestamp, ShouldNotBeBlank)
-		So(result.Header.Type, ShouldHaveSameTypeAs, int64(1))
-		So(result.Header.Version, ShouldHaveSameTypeAs, int64(0))
-	})
-}
-
-func TestRPC_GetTransaction(t *testing.T) {
-	Convey("returns details of a Transaction by its hash", t, func() {
-		result, err := NewRPC(testNet).GetTransaction("5a09b08a28ca4b6ef1935bb3d00307530ad64e4150fba573cdb9f0dea847d1c7")
-		So(err, ShouldBeNil)
-		So(result.ID, ShouldEqual, "5a09b08a28ca4b6ef1935bb3d00307530ad64e4150fba573cdb9f0dea847d1c7")
-		So(result.Amount, ShouldEqual, "1000000000000")
-		So(result.GasLimit, ShouldEqual, "1")
-		So(result.GasPrice, ShouldEqual, "1000000000")
-		So(result.Nonce, ShouldEqual, "1")
-		So(result.Receipt.CumulativeGas, ShouldEqual, "1")
-		So(result.Receipt.Success, ShouldBeTrue)
-		So(result.SenderPubKey, ShouldEqual, "0x03B994288C5B6CB99A694BEF9F7E01B1773DDB8F662ADE12D98B880487232D3565")
-		So(result.Signature, ShouldEqual, "0x2576BC15EC10C5BB5A673EE4A5B72F8D3C824EC0C96AE3B69EE098290BA6044EE605BD1D9EDF42271AC16639703B42685AE276EC4703F3B2F86BF47DE3BA658D")
-		So(result.ToAddr, ShouldEqual, "5568cf7c38334a4e960bc99d8f22c1e90645e5f2")
-		So(result.Version, ShouldEqual, "0")
-	})
-}
-
-func TestRPC_CreateTransaction(t *testing.T) {
-	Convey("returns a hash of created Transaction", t, func() {
-		zillean := NewZillean(testNet)
-		privateKey := "AAFD338492962FAD674EE3BD6EBC57C8373B2C9BADBAC8806D890F1FE8C571DF"
-		publicKey, _ := zillean.GetPublicKeyFromPrivateKey(privateKey)
-		rawTx := RawTransaction{
-			Version:  0,
-			Nonce:    1,
-			To:       "5568CF7C38334A4E960BC99D8F22C1E90645E5F2",
-			Amount:   "1000000000000",
-			PubKey:   publicKey,
-			GasPrice: big.NewInt(1000000000),
-			GasLimit: 1,
-		}
-		k, _ := GenerateDRN(EncodeTransaction(rawTx))
-		signature, _ := zillean.SignTransaction(k, rawTx, privateKey)
-		result, err := zillean.RPC.CreateTransaction(rawTx, signature)
-		So(err, ShouldBeNil)
-		So(result, ShouldEqual, "5a09b08a28ca4b6ef1935bb3d00307530ad64e4150fba573cdb9f0dea847d1c7")
-	})
-}
-
-func TestRPC_GetSmartContracts(t *testing.T) {
-	Convey("returns the list of smart contracts created by an address", t, func() {
-		result, err := NewRPC(testNet).GetSmartContracts("f3d2005b55102d6588dd9771e9356f1908c9d97f")
-		So(err, ShouldBeNil)
-		So(len(result), ShouldEqual, 1)
-		So(result[0].Address, ShouldEqual, "83536f90ed096b5d14ba2c296a32f37849dd3221")
-		So(result[0].State[0].Type, ShouldEqual, "Uint128")
-		So(result[0].State[0].Value, ShouldEqual, "0")
-		So(result[0].State[0].Vname, ShouldEqual, "_balance")
-	})
-}
-
-func TestRPC_GetSmartContractState(t *testing.T) {
-	Convey("returns the state variables (mutable) of a smart contract address", t, func() {
-		result, err := NewRPC(testNet).GetSmartContractState("83536f90ed096b5d14ba2c296a32f37849dd3221")
-		So(err, ShouldBeNil)
-		So(len(result), ShouldEqual, 1)
-		So(result[0].Type, ShouldEqual, "Uint128")
-		So(result[0].Value, ShouldEqual, "0")
-		So(result[0].Vname, ShouldEqual, "_balance")
-	})
-}
-
-func TestRPC_GetSmartContractCode(t *testing.T) {
-	Convey("returns the Scilla code of a smart contract address", t, func() {
-		result, err := NewRPC(testNet).GetSmartContractCode("83536f90ed096b5d14ba2c296a32f37849dd3221")
-		So(err, ShouldBeNil)
-		So(result, ShouldEqual, "scilla_version 0\n\n    (* HelloWorld contract *)\n    \n    import ListUtils\n    \n    (***************************************************)\n    (*               Associated library                *)\n    (***************************************************)\n    library HelloWorld\n    \n    let one_msg = \n      fun (msg : Message) => \n      let nil_msg = Nil {Message} in\n      Cons {Message} msg nil_msg\n    \n    let not_owner_code = Int32 1\n    let set_hello_code = Int32 2\n    \n    (***************************************************)\n    (*             The contract definition             *)\n    (***************************************************)\n    \n    contract HelloWorld\n    (owner: ByStr20)\n    \n    field welcome_msg : String = \"\"\n    \n    transition setHello (msg : String)\n      is_owner = builtin eq owner _sender;\n      match is_owner with\n      | False =>\n        msg = {_tag : \"Main\"; _recipient : _sender; _amount : Uint128 0; code : not_owner_code};\n        msgs = one_msg msg;\n        send msgs\n      | True =>\n        welcome_msg := msg;\n        msg = {_tag : \"Main\"; _recipient : _sender; _amount : Uint128 0; code : set_hello_code};\n        msgs = one_msg msg;\n        send msgs\n      end\n    end\n    \n    \n    transition getHello ()\n        r <- welcome_msg;\n        e = {_eventname: \"getHello()\"; msg: r};\n        event e\n    end")
-	})
-}
-
-func TestRPC_GetSmartContractInit(t *testing.T) {
-	Convey("returns the initialization parameters (immutable) of a given smart contract address", t, func() {
-		result, err := NewRPC(testNet).GetSmartContractInit("83536f90ed096b5d14ba2c296a32f37849dd3221")
-		So(err, ShouldBeNil)
-		So(len(result), ShouldEqual, 3)
-		So(result[0].Type, ShouldEqual, "Uint32")
-		So(result[0].Value, ShouldEqual, "0")
-		So(result[0].Vname, ShouldEqual, "_scilla_version")
-		So(result[1].Type, ShouldEqual, "ByStr20")
-		So(result[1].Value, ShouldEqual, "0xf3d2005b55102d6588dd9771e9356f1908c9d97f")
-		So(result[1].Vname, ShouldEqual, "owner")
-		So(result[2].Type, ShouldEqual, "BNum")
-		So(result[2].Value, ShouldEqual, "9247")
-		So(result[2].Vname, ShouldEqual, "_creation_block")
+		So(result, ShouldEqual, "333")
 	})
 }
 
@@ -208,11 +43,228 @@ func TestRPC_GetBlockchainInfo(t *testing.T) {
 	})
 }
 
-func TestRPC_GetNetworkID(t *testing.T) {
-	Convey("returns the network ID of the specified zilliqa node", t, func() {
-		result, err := NewRPC(testNet).GetNetworkID()
+func TestRPC_GetShardingStructure(t *testing.T) {
+	Convey("returns the current sharding structure of the network from the specified network's lookup node", t, func() {
+		result, err := NewRPC(testNet).GetShardingStructure()
 		So(err, ShouldBeNil)
-		So(result, ShouldEqual, "TestNet")
+		fmt.Println(result)
+		So(len(result.NumPeers), ShouldBeGreaterThan, 0)
+		So(result.NumPeers, ShouldHaveSameTypeAs, []int64{})
+	})
+}
+
+func TestRPC_GetDsBlock(t *testing.T) {
+	Convey("returns details of a Directory Service block by block number", t, func() {
+		result, err := NewRPC(testNet).GetDsBlock("1")
+		So(err, ShouldBeNil)
+		So(result.Header.BlockNum, ShouldEqual, "1")
+		So(result.Header.Difficulty, ShouldEqual, 3)
+		So(result.Header.DifficultyDS, ShouldEqual, 5)
+		So(result.Header.GasPrice, ShouldEqual, "1000000000")
+		So(result.Header.LeaderPubKey, ShouldEqual, "0x02081DCD3D93A4406E6D90241931A4D8A28553EC7BA28AB5B51D35D992CA2C7383")
+		So(result.Header.PoWWinners, ShouldResemble, []string{"0x027409E2C105498DE346980A7BD917E93574D86CB3A13B3CE3C989B2E2A96D5A69"})
+		So(result.Header.Prevhash, ShouldEqual, "0f00e9d3175300fc287812d201edcfbfcb8165809606545595bf53700c524648")
+		So(result.Header.Timestamp, ShouldEqual, "1549265830654931")
+		So(result.Signature, ShouldEqual, "CF8A45F50153BC860582DAFEEE074CC3D027DB94D839102BD777EF8AB1F5753163F2223E405B88F3A27D878465B4B9087BDB0D551C1EF954010FC99E8EB265A1")
+	})
+}
+
+func TestRPC_GetLatestDsBlock(t *testing.T) {
+	Convey("returns details of the most recent Directory Service block", t, func() {
+		result, err := NewRPC(testNet).GetLatestDsBlock()
+		So(err, ShouldBeNil)
+		So(result.Header.BlockNum, ShouldNotBeBlank)
+		So(result.Header.Difficulty, ShouldBeGreaterThan, 0)
+		So(result.Header.DifficultyDS, ShouldBeGreaterThan, 0)
+		So(result.Header.GasPrice, ShouldNotBeBlank)
+		So(result.Header.LeaderPubKey, ShouldNotBeBlank)
+		So(result.Header.Prevhash, ShouldNotBeBlank)
+		So(result.Header.Timestamp, ShouldNotBeBlank)
+		So(result.Signature, ShouldNotBeBlank)
+	})
+}
+
+func TestRPC_GetNumDSBlocks(t *testing.T) {
+	Convey("returns the number of Directory Service blocks in the network so far. This is represented as a String", t, func() {
+		result, err := NewRPC(testNet).GetNumDSBlocks()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
+	})
+}
+
+func TestRPC_GetDSBlockRate(t *testing.T) {
+	Convey("returns the current Directory Service blockrate per second", t, func() {
+		result, err := NewRPC(testNet).GetDSBlockRate()
+		So(err, ShouldBeNil)
+		So(result, ShouldBeGreaterThan, 0)
+	})
+}
+
+func TestRPC_DSBlockListing(t *testing.T) {
+	Convey("returns a paginated list of Directory Service blocks", t, func() {
+		result, err := NewRPC(testNet).DSBlockListing(1)
+		So(err, ShouldBeNil)
+		So(len(result.Data), ShouldEqual, 10)
+		So(result.MaxPages, ShouldBeGreaterThan, 0)
+	})
+}
+
+func TestRPC_GetTxBlock(t *testing.T) {
+	Convey("returns details of a Transaction block by block number.", t, func() {
+		result, err := NewRPC(testNet).GetTxBlock("100")
+		So(err, ShouldBeNil)
+		So(result.Body.HeaderSign, ShouldEqual, "07968762C6819E0D17B8761B31F68A26D4AA189547213B4D74E00A09A3B7EECCC4AF8D87C74DE9188A69F25A15D524781BDCD3CE0BE9C594E0D4DBFE00ABAC2A")
+		So(len(result.Body.MicroBlockInfos), ShouldEqual, 4)
+		So(result.Header.BlockNum, ShouldEqual, "100")
+		So(result.Header.DsBlockNum, ShouldEqual, "2")
+		So(result.Header.GasLimit, ShouldEqual, "200000")
+		So(result.Header.GasUsed, ShouldEqual, "0")
+		So(result.Header.MbInfoHash, ShouldEqual, "db311f58e5c43b043f9143c0b8efd62ceaf98eaeedf58b8b8c5300f0df780da1")
+		So(result.Header.MinerPubKey, ShouldEqual, "0x0238EA7FD93C9E0F30EB8F95BC2B22D7C998D76CFB1620172638B998A4BE01C5F0")
+		So(result.Header.NumMicroBlocks, ShouldEqual, 4)
+		So(result.Header.NumTxns, ShouldEqual, 0)
+		So(result.Header.PrevBlockHash, ShouldEqual, "bb6ba0e008f272037c2fad24965a0b67380885ef1a853fe12d07714357a8f541")
+		So(result.Header.Rewards, ShouldEqual, "0")
+		So(result.Header.StateDeltaHash, ShouldEqual, "0000000000000000000000000000000000000000000000000000000000000000")
+		So(result.Header.StateRootHash, ShouldEqual, "c9065f6fd1520e6ed6174a2ae4c587acdfbd7346fcd4419d483cb5bb7b343ef5")
+		So(result.Header.Timestamp, ShouldEqual, "1549267096666600")
+		So(result.Header.Version, ShouldEqual, 1)
+	})
+}
+
+func TestRPC_GetLatestTxBlock(t *testing.T) {
+	Convey("returns details of the most recent Transaction block", t, func() {
+		result, err := NewRPC(testNet).GetLatestTxBlock()
+		So(err, ShouldBeNil)
+		So(result.Body.HeaderSign, ShouldNotBeBlank)
+		So(result.Body.MicroBlockInfos, ShouldNotBeNil)
+		So(result.Header.BlockNum, ShouldNotBeBlank)
+		So(result.Header.DsBlockNum, ShouldNotBeBlank)
+		So(result.Header.GasLimit, ShouldNotBeBlank)
+		So(result.Header.GasUsed, ShouldNotBeBlank)
+		So(result.Header.MbInfoHash, ShouldNotBeBlank)
+		So(result.Header.MinerPubKey, ShouldNotBeBlank)
+		So(result.Header.NumMicroBlocks, ShouldBeGreaterThan, 0)
+		So(result.Header.NumTxns, ShouldHaveSameTypeAs, int64(0))
+		So(result.Header.PrevBlockHash, ShouldNotBeBlank)
+		So(result.Header.Rewards, ShouldNotBeBlank)
+		So(result.Header.StateDeltaHash, ShouldNotBeBlank)
+		So(result.Header.StateRootHash, ShouldNotBeBlank)
+		So(result.Header.Timestamp, ShouldNotBeBlank)
+		So(result.Header.Version, ShouldHaveSameTypeAs, int64(0))
+	})
+}
+
+func TestRPC_GetNumTxBlocks(t *testing.T) {
+	Convey("returns the number of Transaction blocks in the network so far, this is represented as String", t, func() {
+		result, err := NewRPC(testNet).GetNumTxBlocks()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
+	})
+}
+
+func TestRPC_GetTxBlockRate(t *testing.T) {
+	Convey("returns the current Transaction blockrate per second", t, func() {
+		result, err := NewRPC(testNet).GetTxBlockRate()
+		So(err, ShouldBeNil)
+		So(result, ShouldBeGreaterThan, 0)
+	})
+}
+
+func TestRPC_GetTxBlockListing(t *testing.T) {
+	Convey("returns a paginated list of Transaction blocks", t, func() {
+		result, err := NewRPC(testNet).TxBlockListing(1)
+		So(err, ShouldBeNil)
+		So(len(result.Data), ShouldEqual, 10)
+		So(result.MaxPages, ShouldBeGreaterThan, 0)
+	})
+}
+
+func TestRPC_GetNumTransactions(t *testing.T) {
+	Convey("returns the number of Transactions validated in the network so far. This is represented as a String", t, func() {
+		result, err := NewRPC(testNet).GetNumTransactions()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
+	})
+}
+
+func TestRPC_GetTransactionRate(t *testing.T) {
+	Convey("returns the current Transaction rate of the network", t, func() {
+		result, err := NewRPC(testNet).GetTransactionRate()
+		So(err, ShouldBeNil)
+		So(result, ShouldBeGreaterThanOrEqualTo, 0)
+	})
+}
+
+func TestRPC_GetCurrentMiniEpoch(t *testing.T) {
+	Convey("returns the number of TX epochs in the network so far represented as String", t, func() {
+		result, err := NewRPC(testNet).GetCurrentMiniEpoch()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
+	})
+}
+
+func TestRPC_GetCurrentDSEpoch(t *testing.T) {
+	Convey("returns the number of DS epochs in the network so far represented as String", t, func() {
+		result, err := NewRPC(testNet).GetCurrentDSEpoch()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
+	})
+}
+
+func TestRPC_GetPrevDifficulty(t *testing.T) {
+	Convey("returns the minimum shard difficulty of the previous block, this is represented as an Number", t, func() {
+		result, err := NewRPC(testNet).GetPrevDifficulty()
+		So(err, ShouldBeNil)
+		So(result, ShouldBeGreaterThan, 0)
+	})
+}
+
+func TestRPC_GetPrevDSDifficulty(t *testing.T) {
+	Convey("returns the minimum DS difficulty of the previous block, this is represented as an Number", t, func() {
+		result, err := NewRPC(testNet).GetPrevDSDifficulty()
+		So(err, ShouldBeNil)
+		So(result, ShouldBeGreaterThan, 0)
+	})
+}
+
+func TestRPC_CreateTransaction(t *testing.T) {
+	Convey("returns a hash of created Transaction", t, func() {
+		zillean := NewZillean(testNet)
+		privateKey := "B7139607427E6A03436469806FC1167ECEA26130736BDE063A4EED01036DBF03"
+		publicKey, _ := zillean.GetPublicKeyFromPrivateKey(privateKey)
+		rawTx := RawTransaction{
+			Version:  21823489,
+			Nonce:    1,
+			To:       "Df4B175C78e16EeBC05173E5C1f87355622D8104",
+			Amount:   "1000000000000",
+			PubKey:   publicKey,
+			GasPrice: big.NewInt(1000000000),
+			GasLimit: 1,
+		}
+		signature, _ := zillean.SignTransaction(rawTx, privateKey)
+		result, err := zillean.RPC.CreateTransaction(rawTx, signature)
+		So(err, ShouldBeNil)
+		So(result, ShouldEqual, "920f29f2985aac61637e82f7170f6ca465cc7e5495fecd53c808d63a98cbc8c5")
+	})
+}
+
+func TestRPC_GetTransaction(t *testing.T) {
+	Convey("returns details of a Transaction by its hash", t, func() {
+		result, err := NewRPC(testNet).GetTransaction("920f29f2985aac61637e82f7170f6ca465cc7e5495fecd53c808d63a98cbc8c5")
+		So(err, ShouldBeNil)
+		So(result.ID, ShouldEqual, "920f29f2985aac61637e82f7170f6ca465cc7e5495fecd53c808d63a98cbc8c5")
+		So(result.Amount, ShouldEqual, "1000000000000")
+		So(result.GasLimit, ShouldEqual, "1")
+		So(result.GasPrice, ShouldEqual, "1000000000")
+		So(result.Nonce, ShouldEqual, "1")
+		So(result.Receipt.CumulativeGas, ShouldEqual, "1")
+		So(result.Receipt.EpochNum, ShouldEqual, "68317")
+		So(result.Receipt.Success, ShouldBeTrue)
+		So(result.SenderPubKey, ShouldEqual, "0x02892A6380826988CC46F317310D09F3BAB838B9D8C2407775F20F6AB8BD2A9FFF")
+		So(result.Signature, ShouldEqual, "0x11D6123D59EDD00E9A22E4909B1AC08ECED2B64366DF883C6231B491A4FFDE4E31DF1A424F8987657B3B66AA0E0220B8C61BD1FFA79912F700D220297EDE051C")
+		So(result.ToAddr, ShouldEqual, "df4b175c78e16eebc05173e5c1f87355622d8104")
+		So(result.Version, ShouldEqual, "21823489")
 	})
 }
 
@@ -224,20 +276,109 @@ func TestRPC_GetRecentTransactions(t *testing.T) {
 	})
 }
 
-func TestRPC_GetDSBlockListing(t *testing.T) {
-	Convey("returns a paginated list of Directory Service blocks", t, func() {
-		result, err := NewRPC(testNet).DSBlockListing(1)
+func TestRPC_GetTransactionsForTxBlock(t *testing.T) {
+	Convey("returns the transactions included within a micro-block created by a specific shard", t, func() {
+		result, err := NewRPC(testNet).GetTransactionsForTxBlock("68317")
 		So(err, ShouldBeNil)
-		So(len(result.Data), ShouldEqual, 10)
-		So(result.MaxPages, ShouldBeGreaterThan, 0)
+		So(len(result), ShouldBeGreaterThan, 0)
+		So(result[1][0], ShouldEqual, "920f29f2985aac61637e82f7170f6ca465cc7e5495fecd53c808d63a98cbc8c5")
 	})
 }
 
-func TestRPC_GetTxBlockListing(t *testing.T) {
-	Convey("returns a paginated list of Transaction blocks", t, func() {
-		result, err := NewRPC(testNet).TxBlockListing(1)
+func TestRPC_GetNumTxnsTxEpoch(t *testing.T) {
+	Convey("returns the number of transactions in this Transaction epoch, this is represented as String", t, func() {
+		result, err := NewRPC(testNet).GetNumTxnsTxEpoch()
 		So(err, ShouldBeNil)
-		So(len(result.Data), ShouldEqual, 10)
-		So(result.MaxPages, ShouldBeGreaterThan, 0)
+		So(result, ShouldNotBeBlank)
+	})
+}
+
+func TestRPC_GetNumTxnsDSEpoch(t *testing.T) {
+	Convey("returns the number of transactions in this Directory Service epoch, this is represented as String", t, func() {
+		result, err := NewRPC(testNet).GetNumTxnsDSEpoch()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
+	})
+}
+
+func TestRPC_GetMinimumGasPrice(t *testing.T) {
+	Convey("returns the minimum gas price of the last DS epoch represented as String", t, func() {
+		result, err := NewRPC(testNet).GetMinimumGasPrice()
+		So(err, ShouldBeNil)
+		So(result, ShouldNotBeBlank)
+	})
+}
+
+func TestRPC_GetSmartContractCode(t *testing.T) {
+	Convey("returns the Scilla code of a smart contract address", t, func() {
+		result, err := NewRPC(testNet).GetSmartContractCode("6c1169e8a77d34d6d615862db5f62f0a9791cb9f")
+		So(err, ShouldBeNil)
+		So(result, ShouldEqual, "scilla_version 0\n\n    (* HelloWorld contract *)\n\n    import ListUtils\n\n    (***************************************************)\n    (*               Associated library                *)\n    (***************************************************)\n    library HelloWorld\n\n    let one_msg =\n      fun (msg : Message) =>\n      let nil_msg = Nil {Message} in\n      Cons {Message} msg nil_msg\n\n    let not_owner_code = Int32 1\n    let set_hello_code = Int32 2\n\n    (***************************************************)\n    (*             The contract definition             *)\n    (***************************************************)\n\n    contract HelloWorld\n    (owner: ByStr20)\n\n    field welcome_msg : String = \"\"\n\n    transition setHello (msg : String)\n      is_owner = builtin eq owner _sender;\n      match is_owner with\n      | False =>\n        msg = {_tag : \"Main\"; _recipient : _sender; _amount : Uint128 0; code : not_owner_code};\n        msgs = one_msg msg;\n        send msgs\n      | True =>\n        welcome_msg := msg;\n        msg = {_tag : \"Main\"; _recipient : _sender; _amount : Uint128 0; code : set_hello_code};\n        msgs = one_msg msg;\n        send msgs\n      end\n    end\n\n\n    transition getHello ()\n        r <- welcome_msg;\n        e = {_eventname: \"getHello()\"; msg: r};\n        event e\n    end")
+	})
+}
+
+func TestRPC_GetSmartContractInit(t *testing.T) {
+	Convey("returns the initialization parameters (immutable) of a given smart contract address", t, func() {
+		result, err := NewRPC(testNet).GetSmartContractInit("6c1169e8a77d34d6d615862db5f62f0a9791cb9f")
+		So(err, ShouldBeNil)
+		So(len(result), ShouldEqual, 4)
+		So(result[0].Type, ShouldEqual, "Uint32")
+		So(result[0].Value, ShouldEqual, "0")
+		So(result[0].Vname, ShouldEqual, "_scilla_version")
+		So(result[1].Type, ShouldEqual, "ByStr20")
+		So(result[1].Value, ShouldEqual, "0xf49f1306bc8fb0cd8167a58a3550c1443072e96b")
+		So(result[1].Vname, ShouldEqual, "owner")
+		So(result[2].Type, ShouldEqual, "BNum")
+		So(result[2].Value, ShouldEqual, "73628")
+		So(result[2].Vname, ShouldEqual, "_creation_block")
+		So(result[3].Type, ShouldEqual, "ByStr20")
+		So(result[3].Value, ShouldEqual, "0x6c1169e8a77d34d6d615862db5f62f0a9791cb9f")
+		So(result[3].Vname, ShouldEqual, "_this_address")
+	})
+}
+
+func TestRPC_GetSmartContractState(t *testing.T) {
+	Convey("returns the state variables (mutable) of a smart contract address", t, func() {
+		result, err := NewRPC(testNet).GetSmartContractState("6c1169e8a77d34d6d615862db5f62f0a9791cb9f")
+		So(err, ShouldBeNil)
+		So(len(result), ShouldEqual, 2)
+		So(result[0].Type, ShouldEqual, "String")
+		So(result[0].Value, ShouldEqual, "Hello World")
+		So(result[0].Vname, ShouldEqual, "welcome_msg")
+		So(result[1].Type, ShouldEqual, "Uint128")
+		So(result[1].Value, ShouldEqual, "0")
+		So(result[1].Vname, ShouldEqual, "_balance")
+	})
+}
+
+func TestRPC_GetSmartContracts(t *testing.T) {
+	Convey("returns the list of smart contracts created by an address", t, func() {
+		result, err := NewRPC(testNet).GetSmartContracts("f49f1306bc8fb0cd8167a58a3550c1443072e96b")
+		So(err, ShouldBeNil)
+		So(len(result), ShouldEqual, 1)
+		So(result[0].Address, ShouldEqual, "6c1169e8a77d34d6d615862db5f62f0a9791cb9f")
+		So(result[0].State[0].Type, ShouldEqual, "String")
+		So(result[0].State[0].Value, ShouldEqual, "Hello World")
+		So(result[0].State[0].Vname, ShouldEqual, "welcome_msg")
+		So(result[0].State[1].Type, ShouldEqual, "Uint128")
+		So(result[0].State[1].Value, ShouldEqual, "0")
+		So(result[0].State[1].Vname, ShouldEqual, "_balance")
+	})
+}
+
+func TestRPC_GetContractAddressFromTransactionID(t *testing.T) {
+	Convey("returns a smart contract address of 20 bytes from a transaction ID, represented as a String", t, func() {
+		result, err := NewRPC(testNet).GetContractAddressFromTransactionID("1088aa52939a6d6d79deb80557f75d00b9e8615864df906625dc9e6948b9be95")
+		So(err, ShouldBeNil)
+		So(result, ShouldEqual, "6c1169e8a77d34d6d615862db5f62f0a9791cb9f")
+	})
+}
+
+func TestRPC_GetBalance(t *testing.T) {
+	Convey("returns the balance and nonce of a given address", t, func() {
+		result, err := NewRPC(testNet).GetBalance("Df4B175C78e16EeBC05173E5C1f87355622D8104")
+		So(err, ShouldBeNil)
+		So(result.Balance, ShouldEqual, "3000000000000")
+		So(result.Nonce, ShouldEqual, 0)
 	})
 }

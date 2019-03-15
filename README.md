@@ -1,4 +1,8 @@
 # Zilliqa Golang SDK
+[![GoDoc](https://godoc.org/github.com/GincoInc/zillean?status.svg)](https://godoc.org/github.com/GincoInc/zillean)
+[![Go Report Card](https://goreportcard.com/badge/github.com/GincoInc/zillean)](https://goreportcard.com/report/github.com/GincoInc/zillean)
+[![Build Status](https://travis-ci.org/GincoInc/zillean.svg?branch=develop)](https://travis-ci.org/GincoInc/zillean)
+
 A Golang implementation of [Zilliqa](https://github.com/Zilliqa/Zilliqa) API.
 
 The project is still under development. Please note that specifications may change greatly.
@@ -28,7 +32,7 @@ import (
 
 func main() {
 	// initialize the Zillean
-	zil := zillean.NewZillean("http://127.0.0.1:4200")
+	zil := zillean.NewZillean("https://api.zilliqa.com")
 
 	// generate a private key
 	privKey := zil.GeneratePrivateKey()
@@ -47,15 +51,14 @@ func main() {
 		Version:  0,
 		Nonce:    2,
 		To:       "to address",
-		Amount:   "1",
+		Amount:   "1000000000000",
 		PubKey:   pubKey,
-		GasPrice: 1,
+		GasPrice: big.NewInt(1000000000),
 		GasLimit: 1,
 	}
 	signature, _ := zil.SignTransaction(rawTx, privKey)
 	txID, _ := zil.RPC.CreateTransaction(rawTx, signature)
 	fmt.Printf("txID: %s\n", txID)
-}
 }
 ```
 
@@ -72,19 +75,39 @@ func main() {
 - [x] VerifySignature
 
 ### JSON-RPC API
-- [x] GetBalance
-- [x] GetDsBlock
-- [x] GetTxBlock
-- [x] GetLatestDsBlock
-- [x] GetLatestTxBlock
-- [x] GetTransaction
-- [x] CreateTransaction
-- [ ] GetSmartContracts
-- [ ] GetSmartContractState
-- [ ] GetSmartContractCode
-- [ ] GetSmartContractInit
-- [x] GetBlockchainInfo
+#### Blockchain-related methods
 - [x] GetNetworkId
+- [x] GetBlockchainInfo
+- [x] GetShardingStructure
+- [x] GetDsBlock
+- [x] GetLatestDsBlock
+- [x] GetNumDSBlocks
+- [x] GetDSBlockRate
+- [x] DSBlockListing
+- [x] GetTxBlock
+- [x] GetLatestTxBlock
+- [x] GetNumTxBlocks
+- [x] GetTxBlockRate
+- [x] TxBlockListing
+- [x] GetNumTransactions
+- [x] GetTransactionRate
+- [x] GetCurrentMiniEpoch
+- [x] GetCurrentDSEpoch
+- [x] GetPrevDifficulty
+- [x] GetPrevDSDifficulty
+#### Transaction-related methods
+- [x] CreateTransaction
+- [x] GetTransaction
 - [x] GetRecentTransactions
-- [x] GetDSBlockListing 
-- [x] GetTxBlockListing 
+- [x] GetTransactionsForTxBlock
+- [x] GetNumTxnsTxEpoch
+- [x] GetNumTxnsDSEpoch
+- [x] GetMinimumGasPrice
+#### Contract-related methods
+- [x] GetSmartContractCode
+- [x] GetSmartContractInit
+- [x] GetSmartContractState
+- [x] GetSmartContracts
+- [x] GetContractAddressFromTransactionID
+#### Account-related methods
+- [x] GetBalance

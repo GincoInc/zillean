@@ -29,7 +29,13 @@ func NewECSchnorr() *ECSchnorr {
 // GeneratePrivateKey generates a new private key for Schnorr signature.
 func (ecs *ECSchnorr) GeneratePrivateKey() []byte {
 	b := make([]byte, 32)
-	rand.Read(b)
+	for {
+		rand.Read(b)
+		_b := new(big.Int).SetBytes(b)
+		if _b.Cmp(big.NewInt(0)) == 1 && _b.Cmp(ecs.Curve.Params().N) == -1 {
+			break
+		}
+	}
 	return b
 }
 
@@ -41,13 +47,27 @@ func (ecs *ECSchnorr) GetPublicKey(privKey []byte, compress bool) []byte {
 }
 
 // Sign returns the signature (r, s) on a given message.
+func (ecs *ECSchnorr) Sign(privKey, pubKey, msg []byte) ([]byte, []byte) {
+	for {
+		k, err := generateDRN(msg)
+		if err != nil {
+			continue
+		}
+		r, s, err := ecs.trySign(privKey, pubKey, k, msg)
+		if err == nil {
+			return r, s
+		}
+	}
+}
+
+// trySign tries to return the signature (r, s) on a given message.
 // The algorithm takes the following step:
 // 1. Take a radom k as an input
 // 2. Compute the commitment Q = kG, where  G is the base point
 // 3. Compute the challenge r = H(Q, pubKey, msg)
 // 4. Compute s = k - r * privKey mod n
 // 5. Signature on m is (r, s)
-func (ecs *ECSchnorr) Sign(privKey, pubKey, k, msg []byte) ([]byte, []byte, error) {
+func (ecs *ECSchnorr) trySign(privKey, pubKey, k, msg []byte) ([]byte, []byte, error) {
 	// 1. Take a radom k as an input
 	_k := new(big.Int).SetBytes(k)
 	if _k.Cmp(big.NewInt(0)) == 0 || _k.Cmp(ecs.Curve.Params().N) >= 0 {
@@ -58,12 +78,9 @@ func (ecs *ECSchnorr) Sign(privKey, pubKey, k, msg []byte) ([]byte, []byte, erro
 	Qx, Qy := ecs.Curve.ScalarBaseMult(k)
 	Q := crypto.Compress(ecs.Curve, Qx, Qy)
 
-	r := new(big.Int).SetBytes(hash(Q, pubKey, msg))
-	if r.Cmp(big.NewInt(0)) == 0 || r.Cmp(ecs.Curve.Params().N) >= 0 {
-		return nil, nil, errors.New("Invalid r")
-	}
-
 	// 3. Compute the challenge r = H(Q, pubKey, msg)
+	r := new(big.Int).SetBytes(hash(Q, pubKey, msg))
+	r = r.Mod(r, ecs.Curve.Params().N)
 	sk := new(big.Int).SetBytes(privKey)
 	_r := *r
 

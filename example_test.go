@@ -32,8 +32,7 @@ func Example() {
 		GasPrice: big.NewInt(1000000000),
 		GasLimit: 1,
 	}
-	k, _ := GenerateDRN(EncodeTransaction(rawTx))
-	signature, _ := fromZil.SignTransaction(k, rawTx, fromPrivKey)
+	signature, _ := fromZil.SignTransaction(rawTx, fromPrivKey)
 	txID, _ := fromZil.RPC.CreateTransaction(rawTx, signature)
 	fmt.Printf("txID: %s\n", txID)
 }

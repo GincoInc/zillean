@@ -102,13 +102,10 @@ func (z *Zillean) IsAddress(address string) bool {
 }
 
 // SignTransaction returns the EC-Schnorr signature on a raw transaction.
-func (z *Zillean) SignTransaction(k []byte, rawTx RawTransaction, privateKey string) (string, error) {
+func (z *Zillean) SignTransaction(rawTx RawTransaction, privateKey string) (string, error) {
 	privKey, _ := hex.DecodeString(privateKey)
 	pubKey, _ := hex.DecodeString(rawTx.PubKey)
-	r, s, err := z.ECS.Sign(privKey, pubKey, k, EncodeTransaction(rawTx))
-	if err != nil {
-		return "", err
-	}
+	r, s := z.ECS.Sign(privKey, pubKey, encodeTransaction(rawTx))
 
 	return fmt.Sprintf("%x%x", r, s), nil
 }
