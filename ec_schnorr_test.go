@@ -18,7 +18,7 @@ func TestECSchnorr_GeneratePrivateKey(t *testing.T) {
 
 func TestECSchnorr_GetPublicKey(t *testing.T) {
 	Convey("returns the public key from the private key", t, func() {
-		for _, vector := range testVectors {
+		for _, vector := range addressVectors {
 			privKey, _ := hex.DecodeString(vector.privateKey)
 			pubKey, _ := hex.DecodeString(vector.publicKey)
 			So(NewECSchnorr().GetPublicKey(privKey, true), ShouldResemble, pubKey)
